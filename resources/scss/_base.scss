@@ -1,0 +1,85 @@
+@use 'variables' as v;
+
+:root {
+    --bg:            #{v.$color-bg};
+    --bg-2:          #{v.$color-bg-2};
+    --surface:       #{v.$color-surface};
+    --surface-2:     #{v.$color-surface-2};
+    --surface-3:     #{v.$color-surface-3};
+    --surface-hover: #{v.$color-surface-hover};
+    --border:        #{v.$color-border};
+    --border-strong: #{v.$color-border-strong};
+    --border-green:  #{v.$color-border-green};
+    --text:          #{v.$color-text};
+    --text-dim:      #{v.$color-text-dim};
+    --text-mute:     #{v.$color-text-mute};
+    --green:         #{v.$color-green};
+    --green-bright:  #{v.$color-green-bright};
+    --green-dim:     #{v.$color-green-dim};
+    --green-soft:    #{v.$color-green-soft};
+    --green-glow:    #{v.$color-green-glow};
+    --orange:        #{v.$color-orange};
+    --orange-soft:   #{v.$color-orange-soft};
+    --red:           #{v.$color-red};
+    --red-soft:      #{v.$color-red-soft};
+    --blue:          #{v.$color-blue};
+    --sans:          #{v.$font-sans};
+    --mono:          #{v.$font-mono};
+    --r-sm:          #{v.$r-sm};
+    --r-md:          #{v.$r-md};
+    --r-lg:          #{v.$r-lg};
+    --r-xl:          #{v.$r-xl};
+    --maxw:          #{v.$maxw};
+    --shadow:        #{v.$shadow};
+    --shadow-green:  #{v.$shadow-green};
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: v.$font-sans;
+    background-color: v.$color-bg;
+    color: v.$color-text;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+    background-image:
+        radial-gradient(1100px 460px at 50% -180px, rgba(22, 193, 114, .16), transparent 70%),
+        radial-gradient(900px 500px at 100% -120px, rgba(75, 159, 255, .05), transparent 70%),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, .014) 0 64px, transparent 64px 128px);
+    background-attachment: fixed;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.mono {
+    font-family: v.$font-mono;
+    font-variant-numeric: tabular-nums;
+}

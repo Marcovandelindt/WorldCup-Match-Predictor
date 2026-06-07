@@ -1,0 +1,54 @@
+// Surfaces
+$color-bg:            #0a0d11;
+$color-bg-2:          #0c1015;
+$color-surface:       #12171e;
+$color-surface-2:     #161c24;
+$color-surface-3:     #1b222c;
+$color-surface-hover: #1a212b;
+
+// Borders
+$color-border:        rgba(255, 255, 255, .07);
+$color-border-strong: rgba(255, 255, 255, .13);
+$color-border-green:  rgba(22, 193, 114, .40);
+
+// Text
+$color-text:      #eef2f5;
+$color-text-dim:  #9aa7b3;
+$color-text-mute: #616d79;
+
+// Accent
+$color-green:        #16c172;
+$color-green-bright: #2bd97a;
+$color-green-dim:    #0f8f54;
+$color-green-soft:   rgba(22, 193, 114, .12);
+$color-green-glow:   rgba(22, 193, 114, .28);
+
+// Status
+$color-orange:      #f5a623;
+$color-orange-soft: rgba(245, 166, 35, .11);
+$color-red:         #ef4757;
+$color-red-soft:    rgba(239, 71, 87, .10);
+$color-blue:        #4b9fff;
+
+// Typography
+$font-sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+$font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+// Geometry
+$r-sm: 8px;
+$r-md: 12px;
+$r-lg: 16px;
+$r-xl: 20px;
+$maxw: 1240px;
+
+// Shadows
+$shadow:       0 1px 2px rgba(0, 0, 0, .4), 0 8px 28px rgba(0, 0, 0, .35);
+$shadow-green: 0 8px 30px rgba(22, 193, 114, .10);
+
+// Spacing
+$sp-xs:  .25rem;
+$sp-sm:  .5rem;
+$sp-md:  1rem;
+$sp-lg:  1.5rem;
+$sp-xl:  2rem;
+$sp-xxl: 3rem;

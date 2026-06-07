@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Match extends Model
+class FootballMatch extends Model
 {
+    protected $table = 'matches';
+
     protected $fillable = [
         'api_id', 'home_team_id', 'away_team_id', 'match_date',
         'stage', 'group_name', 'status', 'venue',

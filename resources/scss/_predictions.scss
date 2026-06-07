@@ -1,0 +1,233 @@
+@use 'variables' as v;
+
+// ── Hero block ───────────────────────────────────────────────────────────────
+.predict-hero {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(700px 300px at 50% -40px, rgba(22, 193, 114, .18), transparent 70%),
+        v.$color-surface;
+    border: 1px solid v.$color-border-green;
+    border-radius: v.$r-xl;
+    padding: 30px;
+}
+
+.hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.hero-teams {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 18px;
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+.hero-team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.hero-flag     { font-size: 3.2rem; line-height: 1; filter: drop-shadow(0 3px 6px rgba(0,0,0,.45)); }
+.hero-team-name { font-weight: 600; font-size: 1.05rem; }
+
+.hero-score {
+    font-family: v.$font-mono;
+    font-weight: 700;
+    font-size: 3.4rem;
+    letter-spacing: .02em;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    .dash { color: v.$color-text-mute; font-weight: 400; }
+}
+
+.hero-prob {
+    margin: 22px auto 0;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 18px;
+    border-radius: 999px;
+    background: v.$color-green-soft;
+    border: 1px solid v.$color-border-green;
+
+    .big { font-family: v.$font-mono; font-weight: 700; font-size: 1.25rem; color: v.$color-green-bright; }
+    .lbl { color: v.$color-text-dim; font-size: .85rem; }
+}
+
+.hero-center { display: grid; place-items: center; text-align: center; }
+
+// ── WDL probability bar ──────────────────────────────────────────────────────
+.wdl {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+    margin: 24px auto 0;
+    max-width: 520px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.wdl-seg {
+    padding: 9px 8px;
+    text-align: center;
+
+    .p { font-family: v.$font-mono; font-weight: 700; font-size: 1rem; }
+    .l { font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: v.$color-text-dim; margin-top: 2px; }
+}
+
+.wdl-home { background: linear-gradient(180deg, rgba(22, 193, 114, .22), rgba(22, 193, 114, .10)); }
+.wdl-draw { background: v.$color-surface-3; }
+.wdl-away { background: linear-gradient(180deg, rgba(75, 159, 255, .18), rgba(75, 159, 255, .07)); }
+
+.wdl-home .p { color: v.$color-green-bright; }
+.wdl-away .p { color: v.$color-blue; }
+
+// ── Top-10 scoreline bars ────────────────────────────────────────────────────
+.bars { display: flex; flex-direction: column; gap: 9px; }
+
+.bar-row {
+    display: grid;
+    grid-template-columns: 58px 1fr 52px;
+    align-items: center;
+    gap: 14px;
+
+    &.top {
+        .bar-fill { background: linear-gradient(90deg, v.$color-green, v.$color-green-bright); box-shadow: 0 0 16px v.$color-green-glow; }
+        .bar-score { color: v.$color-green-bright; }
+    }
+}
+
+.bar-score { font-family: v.$font-mono; font-weight: 600; font-size: .88rem; color: v.$color-text-dim; text-align: center; }
+
+.bar-track {
+    height: 26px;
+    background: v.$color-surface-2;
+    border-radius: 7px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid v.$color-border;
+}
+
+.bar-fill {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, v.$color-green-dim, v.$color-green);
+    border-radius: 6px;
+    transform-origin: left;
+    transition: width .8s cubic-bezier(.22, .61, .36, 1);
+}
+
+.bar-pct { font-family: v.$font-mono; font-weight: 600; font-size: .85rem; text-align: right; }
+
+// ── Technical calculation ────────────────────────────────────────────────────
+.calc-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 18px;
+}
+
+.lambda-box { display: flex; flex-direction: column; gap: 14px; }
+
+.lambda {
+    background: v.$color-surface-2;
+    border: 1px solid v.$color-border;
+    border-radius: v.$r-md;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .meta { display: flex; flex-direction: column; gap: 3px; }
+    .greek { font-family: v.$font-mono; font-size: .78rem; color: v.$color-text-mute; }
+    .team-mini { font-weight: 600; font-size: .95rem; display: flex; align-items: center; gap: 7px; }
+    .val { font-family: v.$font-mono; font-weight: 700; font-size: 1.9rem; }
+    .val small { font-size: .8rem; color: v.$color-text-mute; font-weight: 500; }
+
+    &.home .val { color: v.$color-green-bright; }
+    &.away .val { color: v.$color-blue; }
+}
+
+.weights { display: flex; flex-direction: column; gap: 2px; }
+
+.weight-row {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 16px;
+    align-items: center;
+    padding: 13px 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, .045);
+
+    &:last-child { border-bottom: none; }
+}
+
+.weight-name {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    b   { font-weight: 600; font-size: .9rem; }
+    .pct { font-family: v.$font-mono; font-size: .74rem; color: v.$color-green; }
+}
+
+.weight-vis { display: flex; align-items: center; gap: 14px; }
+
+.weight-track {
+    flex: 1;
+    height: 8px;
+    background: v.$color-surface-2;
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid v.$color-border;
+
+    .fill { display: block; height: 100%; background: linear-gradient(90deg, v.$color-green-dim, v.$color-green); border-radius: 999px; }
+}
+
+.weight-scores {
+    display: flex;
+    gap: 8px;
+    font-family: v.$font-mono;
+    font-size: .78rem;
+
+    .h   { color: v.$color-green-bright; }
+    .a   { color: v.$color-blue; }
+    .sep { color: v.$color-text-mute; }
+}
+
+.formula {
+    font-family: v.$font-mono;
+    font-size: .82rem;
+    color: v.$color-text-dim;
+    background: v.$color-bg-2;
+    border: 1px solid v.$color-border;
+    border-radius: v.$r-md;
+    padding: 14px 16px;
+    margin-top: 16px;
+    line-height: 1.7;
+    overflow-x: auto;
+
+    .k { color: v.$color-green; }
+    .n { color: v.$color-text; }
+}
+
+// ── Responsive ───────────────────────────────────────────────────────────────
+@media (max-width: 980px) {
+    .calc-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 680px) {
+    .hero-score { font-size: 2.4rem; }
+    .hero-flag  { font-size: 2.4rem; }
+}

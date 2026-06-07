@@ -1,0 +1,63 @@
+@use 'variables' as v;
+
+// ── Phase groups ─────────────────────────────────────────────────────────────
+.phase-group { margin-bottom: 26px; }
+
+.phase-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+
+    h3 { font-size: 1.05rem; font-weight: 600; }
+}
+
+.phase-line { flex: 1; height: 1px; background: v.$color-border; }
+
+.phase-stat {
+    font-family: v.$font-mono;
+    font-size: .78rem;
+    color: v.$color-text-dim;
+    display: flex;
+    gap: 14px;
+
+    b { color: v.$color-text; }
+}
+
+// ── Fixtures ─────────────────────────────────────────────────────────────────
+.fixtures { display: flex; flex-direction: column; }
+
+.fixture {
+    display: grid;
+    grid-template-columns: 86px 1fr 150px 84px 70px;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, .045);
+    border-left: 3px solid transparent;
+    transition: background .14s;
+
+    &:hover { background: v.$color-surface-hover; }
+    &:last-child { border-bottom: none; }
+
+    &.r-exact  { border-left-color: v.$color-green;  background: rgba(22, 193, 114, .04); }
+    &.r-winner { border-left-color: v.$color-orange; background: rgba(245, 166, 35, .035); }
+    &.r-wrong  { border-left-color: v.$color-red;    background: rgba(239, 71, 87, .03); }
+    &.r-todo   { border-left-color: v.$color-border-strong; opacity: .72; }
+}
+
+.fx-date     { font-family: v.$font-mono; font-size: .78rem; color: v.$color-text-mute; }
+.fx-vs       { color: v.$color-text-mute; font-family: v.$font-mono; font-size: .74rem; }
+.fx-compare  { display: flex; align-items: center; gap: 8px; justify-content: center; }
+.fx-compare .arrow { color: v.$color-text-mute; font-size: .8rem; }
+.fx-todo-tag { font-family: v.$font-mono; font-size: .72rem; color: v.$color-text-mute; text-align: center; }
+
+// ── Responsive ───────────────────────────────────────────────────────────────
+@media (max-width: 680px) {
+    .fixture {
+        grid-template-columns: 64px 1fr 70px;
+        row-gap: 8px;
+
+        .fx-compare { grid-column: 1 / -1; justify-content: flex-start; }
+    }
+}

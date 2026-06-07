@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'football_data' => [
+        'api_key'          => env('FOOTBALL_DATA_API_KEY'),
+        'base_url'         => env('FOOTBALL_DATA_BASE_URL', 'https://api.football-data.org/v4'),
+        'wc_average_goals' => env('WC_AVERAGE_GOALS', 1.30),
+        'dixon_coles_rho'  => env('DIXON_COLES_RHO', 0.13),
+        'cache_ttl_hours'  => env('CACHE_TTL_HOURS', 6),
+    ],
+
 ];

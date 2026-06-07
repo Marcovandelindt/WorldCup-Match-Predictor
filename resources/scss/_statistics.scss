@@ -1,0 +1,168 @@
+@use 'variables' as v;
+
+// ── KPI row ──────────────────────────────────────────────────────────────────
+.kpi-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+
+.kpi {
+    background: v.$color-surface-2;
+    border: 1px solid v.$color-border;
+    border-radius: v.$r-md;
+    padding: 12px 16px;
+    flex: 1;
+    min-width: 130px;
+
+    .v { font-family: v.$font-mono; font-weight: 700; font-size: 1.4rem; }
+    .l { font-size: .74rem; color: v.$color-text-dim; margin-top: 3px; }
+}
+
+// ── Chart grid ───────────────────────────────────────────────────────────────
+.chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.chart-card { padding: 20px 22px; }
+
+.chart-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 12px;
+}
+
+.chart-title { font-size: 1rem; font-weight: 600; }
+.chart-desc  { color: v.$color-text-mute; font-size: .8rem; margin-top: 3px; }
+
+.chart-box {
+    position: relative;
+    height: 260px;
+
+    &.tall { height: 300px; }
+}
+
+.chart-svg { width: 100%; height: 100%; display: block; overflow: visible; }
+
+.chart-legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    .li { display: inline-flex; align-items: center; gap: 7px; font-size: .76rem; color: v.$color-text-dim; }
+    .sw { width: 12px; height: 4px; border-radius: 2px; }
+    .sw.dash { background: repeating-linear-gradient(90deg, v.$color-blue 0 4px, transparent 4px 7px); }
+}
+
+// ── Vertical bar chart (accuracy by phase) ───────────────────────────────────
+.vbars {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    gap: 6px;
+    height: 210px;
+    position: relative;
+    padding: 8px 4px 0;
+    background-image: repeating-linear-gradient(0deg, transparent 0 calc(25% - 1px), rgba(255, 255, 255, .05) calc(25% - 1px) 25%);
+}
+
+.vgroup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.vbar-pair { display: flex; align-items: flex-end; gap: 5px; height: 170px; }
+
+.vbar {
+    width: 16px;
+    border-radius: 5px 5px 0 0;
+    position: relative;
+    min-height: 3px;
+
+    .vval {
+        position: absolute;
+        top: -17px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: v.$font-mono;
+        font-size: .68rem;
+        white-space: nowrap;
+    }
+
+    &.exact  { background: linear-gradient(180deg, v.$color-green-bright, v.$color-green-dim); }
+    &.exact .vval  { color: v.$color-green-bright; }
+    &.winner { background: linear-gradient(180deg, rgba(245, 166, 35, .95), rgba(245, 166, 35, .45)); }
+    &.winner .vval { color: v.$color-orange; }
+    &.locked { width: 34px; height: 4px; background: v.$color-surface-3; border-radius: 2px; }
+}
+
+.vlabel { font-size: .72rem; color: v.$color-text-dim; text-align: center; }
+
+.vgroup.pending {
+    .vlabel  { color: v.$color-text-mute; }
+    .lockmark { font-size: .68rem; color: v.$color-text-mute; font-family: v.$font-mono; }
+}
+
+// ── Scoreline comparison (diverging) ─────────────────────────────────────────
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+
+.compare-col {
+    padding: 4px 0;
+
+    h4 {
+        font-size: .76rem;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: v.$color-text-dim;
+        margin-bottom: 14px;
+        font-weight: 600;
+    }
+
+    &.left  { padding-right: 22px; border-right: 1px solid v.$color-border; }
+    &.right { padding-left: 22px; }
+}
+
+.crow {
+    display: grid;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 11px;
+
+    &.left  { grid-template-columns: 1fr 56px 44px; }
+    &.right { grid-template-columns: 44px 56px 1fr; }
+
+    .cbar { height: 22px; border-radius: 6px; }
+
+    &.left  .cbar { justify-self: end; background: linear-gradient(90deg, rgba(22, 193, 114, .35), v.$color-green); }
+    &.right .cbar { justify-self: start; background: linear-gradient(90deg, v.$color-blue, rgba(75, 159, 255, .35)); }
+
+    .cscore { font-family: v.$font-mono; font-weight: 600; font-size: .85rem; text-align: center; }
+    .cpct   { font-family: v.$font-mono; font-size: .8rem; color: v.$color-text-dim; }
+
+    &.left  .cpct { text-align: right; }
+    &.right .cpct { text-align: left; }
+}
+
+// ── Responsive ───────────────────────────────────────────────────────────────
+@media (max-width: 980px) {
+    .chart-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 680px) {
+    .compare { grid-template-columns: 1fr; }
+
+    .compare-col.left {
+        border-right: none;
+        padding-right: 0;
+        border-bottom: 1px solid v.$color-border;
+        padding-bottom: 16px;
+        margin-bottom: 16px;
+    }
+
+    .compare-col.right { padding-left: 0; }
+}
