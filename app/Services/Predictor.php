@@ -8,13 +8,11 @@ use App\Services\Analyzers\FifaRankingAnalyzer;
 use App\Services\Analyzers\FormAnalyzer;
 use App\Services\Analyzers\HeadToHeadAnalyzer;
 use App\Services\Analyzers\WorldCupHistoryAnalyzer;
-use App\Services\Api\FootballDataClient;
 use App\Services\Models\DixonColesModel;
 
 class Predictor
 {
     public function __construct(
-        private FootballDataClient      $api,
         private FormAnalyzer            $form,
         private HeadToHeadAnalyzer      $h2h,
         private FifaRankingAnalyzer     $fifa,
@@ -28,9 +26,9 @@ class Predictor
         $awayTeam = $match->awayTeam;
         $wcAvg    = (float) config('services.football_data.wc_average_goals', 1.30);
 
-        $formHome = $this->form->calculate($homeTeam->api_id, $this->api);
-        $formAway = $this->form->calculate($awayTeam->api_id, $this->api);
-        $h2hData  = $this->h2h->calculate($match->api_id, $homeTeam->api_id, $this->api);
+        $formHome = $this->form->calculate($homeTeam->id);
+        $formAway = $this->form->calculate($awayTeam->id);
+        $h2hData  = $this->h2h->calculate($homeTeam->id, $awayTeam->id);
         $fifaData = $this->fifa->calculate($homeTeam->fifa_ranking ?? 50, $awayTeam->fifa_ranking ?? 50);
         $wcData   = $this->wcHistory->calculate($homeTeam, $awayTeam);
 

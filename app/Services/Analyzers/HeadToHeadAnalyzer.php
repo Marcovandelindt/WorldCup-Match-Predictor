@@ -2,17 +2,27 @@
 
 namespace App\Services\Analyzers;
 
-use App\Services\Api\FootballDataClient;
+use App\Models\TeamH2hMatch;
 
 class HeadToHeadAnalyzer
 {
-    public function calculate(int $matchApiId, int $homeApiId, FootballDataClient $client): array
+    public function calculate(int $homeTeamId, int $awayTeamId): array
     {
-        $wcAvg   = (float) config('services.football_data.wc_average_goals', 1.30);
-        $data    = $client->getHeadToHead($matchApiId);
-        $matches = $data['matches'] ?? [];
+        $wcAvg = (float) config('services.football_data.wc_average_goals', 1.30);
 
-        if (empty($matches)) {
+        $matches = TeamH2hMatch::where(function ($q) use ($homeTeamId, $awayTeamId) {
+                $q->where('home_team_id', $homeTeamId)
+                  ->where('away_team_id', $awayTeamId);
+            })
+            ->orWhere(function ($q) use ($homeTeamId, $awayTeamId) {
+                $q->where('home_team_id', $awayTeamId)
+                  ->where('away_team_id', $homeTeamId);
+            })
+            ->orderByDesc('match_date')
+            ->limit(10)
+            ->get();
+
+        if ($matches->isEmpty()) {
             return [
                 'attack_strength_home'  => 1.0,
                 'defense_weakness_home' => 1.0,
@@ -25,9 +35,13 @@ class HeadToHeadAnalyzer
         $homeScored = $awayScored = [];
 
         foreach ($matches as $match) {
-            $isHome       = $match['homeTeam']['id'] === $homeApiId;
-            $homeScored[] = $isHome ? $match['score']['fullTime']['home'] : $match['score']['fullTime']['away'];
-            $awayScored[] = $isHome ? $match['score']['fullTime']['away'] : $match['score']['fullTime']['home'];
+            if ($match->home_team_id === $homeTeamId) {
+                $homeScored[] = $match->home_score;
+                $awayScored[] = $match->away_score;
+            } else {
+                $homeScored[] = $match->away_score;
+                $awayScored[] = $match->home_score;
+            }
         }
 
         $avgHome = array_sum($homeScored) / count($homeScored);
@@ -38,7 +52,7 @@ class HeadToHeadAnalyzer
             'defense_weakness_home' => $avgAway / $wcAvg,
             'attack_strength_away'  => $avgAway / $wcAvg,
             'defense_weakness_away' => $avgHome / $wcAvg,
-            'matches_analyzed'      => count($matches),
+            'matches_analyzed'      => $matches->count(),
         ];
     }
 }

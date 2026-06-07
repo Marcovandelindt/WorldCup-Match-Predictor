@@ -2,33 +2,37 @@
 
 namespace App\Services\Analyzers;
 
-use App\Services\Api\FootballDataClient;
+use App\Models\TeamRecentMatch;
 
 class FormAnalyzer
 {
-    public function calculate(int $teamApiId, FootballDataClient $client): array
+    public function calculate(int $teamId): array
     {
         $wcAvg   = (float) config('services.football_data.wc_average_goals', 1.30);
-        $data    = $client->getTeamMatches($teamApiId, 10);
-        $matches = $data['matches'] ?? [];
+        $matches = TeamRecentMatch::where('team_id', $teamId)
+            ->orderByDesc('match_date')
+            ->limit(10)
+            ->get();
 
-        $goalsScored = $goalsConceded = [];
-
-        foreach ($matches as $match) {
-            $isHome          = $match['homeTeam']['id'] === $teamApiId;
-            $goalsScored[]   = $isHome ? $match['score']['fullTime']['home'] : $match['score']['fullTime']['away'];
-            $goalsConceded[] = $isHome ? $match['score']['fullTime']['away'] : $match['score']['fullTime']['home'];
+        if ($matches->isEmpty()) {
+            return [
+                'attack_strength'  => 1.0,
+                'defense_weakness' => 1.0,
+                'avg_scored'       => $wcAvg,
+                'avg_conceded'     => $wcAvg,
+                'matches_analyzed' => 0,
+            ];
         }
 
-        $avgScored   = count($goalsScored)   > 0 ? array_sum($goalsScored)   / count($goalsScored)   : $wcAvg;
-        $avgConceded = count($goalsConceded) > 0 ? array_sum($goalsConceded) / count($goalsConceded) : $wcAvg;
+        $avgScored   = $matches->avg('goals_scored');
+        $avgConceded = $matches->avg('goals_conceded');
 
         return [
             'attack_strength'  => $avgScored   / $wcAvg,
             'defense_weakness' => $avgConceded / $wcAvg,
             'avg_scored'       => $avgScored,
             'avg_conceded'     => $avgConceded,
-            'matches_analyzed' => count($matches),
+            'matches_analyzed' => $matches->count(),
         ];
     }
 }
