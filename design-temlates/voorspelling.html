@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GOALCAST — Voorspelling · Nederland vs Senegal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"></span>
+      <span class="brand-name">GOAL<span>CAST</span></span>
+    </a>
+    <nav class="nav">
+      <a class="nav-link" href="index.html">Dashboard</a>
+      <a class="nav-link" href="resultaten.html">Resultaten</a>
+      <a class="nav-link" href="statistieken.html">Statistieken</a>
+    </nav>
+    <div class="topbar-right">
+      <span class="season-chip">WK 2026 · 🇺🇸🇨🇦🇲🇽</span>
+      <span class="points-pill"><span>Punten</span><strong>174</strong></span>
+    </div>
+  </div>
+</header>
+
+<main class="page" data-screen-label="Voorspelling">
+  <a class="backlink" href="index.html">← Terug naar dashboard</a>
+
+  <!-- ============ HERO: FINALE VOORSPELLING ============ -->
+  <section class="predict-hero">
+    <div class="hero-meta">
+      <span class="badge green">Achtste finale</span>
+      <span class="badge">zo 21 jun 2026 · 21:00</span>
+      <span class="badge">MetLife Stadium · New Jersey</span>
+    </div>
+
+    <div class="hero-teams">
+      <div class="hero-team">
+        <span class="hero-flag">🇳🇱</span>
+        <span class="hero-team-name">Nederland</span>
+      </div>
+      <div class="hero-center">
+        <div class="hero-score mono"><span>1</span><span class="dash">–</span><span>0</span></div>
+        <div class="hero-prob">
+          <span class="big mono">16,3%</span>
+          <span class="lbl">kans op exact deze uitslag</span>
+        </div>
+      </div>
+      <div class="hero-team">
+        <span class="hero-flag">🇸🇳</span>
+        <span class="hero-team-name">Senegal</span>
+      </div>
+    </div>
+
+    <!-- Win / gelijk / verlies -->
+    <div class="wdl">
+      <div class="wdl-seg wdl-home"><div class="p mono">58,2%</div><div class="l">Nederland wint</div></div>
+      <div class="wdl-seg wdl-draw"><div class="p mono">22,4%</div><div class="l">Gelijkspel</div></div>
+      <div class="wdl-seg wdl-away"><div class="p mono">19,4%</div><div class="l">Senegal wint</div></div>
+    </div>
+  </section>
+
+  <!-- ============ TOP 10 SCORELIJNEN ============ -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Top 10 waarschijnlijke scorelijnen</h2>
+      <span class="section-sub">Poisson-verdeling · λ<sub>thuis</sub> 1,43 · λ<sub>uit</sub> 0,74</span>
+    </div>
+    <div class="card card-pad">
+      <div class="bars">
+        <div class="bar-row top">
+          <span class="bar-score">1–0</span>
+          <span class="bar-track"><span class="bar-fill" data-w="100" style="width:0"></span></span>
+          <span class="bar-pct">16,3%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-score">1–1</span>
+          <span class="bar-track"><span class="bar-fill" data-w="74" style="width:0"></span></span>
+          <span class="bar-pct">12,1%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-score">2–0</span>
+          <span class="bar-track"><span class="bar-fill" data-w="72" style="width:0"></span></span>
+          <span class="bar-pct">11,7%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-score">0–0</span>
+          <span class="bar-track"><span class="bar-fill" data-w="70" style="width:0"></span></span>
+          <span class="bar-pct">11,4%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-score">2–1</span>
+          <span class="bar-track"><span class="bar-fill" data-w="53" style="width:0"></span></span>
+          <span class="bar-pct">8,6%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-score">0–1</span>
+          <span class="bar-track"><span class="bar-fill" data-w="52" style="width:0"></span></span>
+          <span class="bar-pct">8,4%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-score">3–0</span>
+          <span class="bar-track"><span class="bar-fill" data-w="34" style="width:0"></span></span>
+          <span class="bar-pct">5,6%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-score">1–2</span>
+          <span class="bar-track"><span class="bar-fill" data-w="28" style="width:0"></span></span>
+          <span class="bar-pct">4,5%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-score">3–1</span>
+          <span class="bar-track"><span class="bar-fill" data-w="25" style="width:0"></span></span>
+          <span class="bar-pct">4,1%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-score">2–2</span>
+          <span class="bar-track"><span class="bar-fill" data-w="20" style="width:0"></span></span>
+          <span class="bar-pct">3,2%</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TECHNISCHE BEREKENING ============ -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Technische berekening</h2>
+      <span class="section-sub">Verwachte doelpunten (λ) per team & gewichtenverdeling</span>
+    </div>
+    <div class="card card-pad">
+      <div class="calc-grid">
+        <!-- Lambda-waarden -->
+        <div class="lambda-box">
+          <div class="lambda home">
+            <div class="meta">
+              <span class="greek">λ thuis</span>
+              <span class="team-mini"><span class="flag">🇳🇱</span> Nederland</span>
+            </div>
+            <span class="val mono">1,43<small> xG</small></span>
+          </div>
+          <div class="lambda away">
+            <div class="meta">
+              <span class="greek">λ uit</span>
+              <span class="team-mini"><span class="flag">🇸🇳</span> Senegal</span>
+            </div>
+            <span class="val mono">0,74<small> xG</small></span>
+          </div>
+          <div class="formula">
+            <span class="k">λ</span> = Σ (gewicht<sub>i</sub> × index<sub>i</sub>)<br>
+            <span class="n">thuis</span> = 0,4·1,62 + 0,3·1,20<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + 0,2·1,35 + 0,1·1,50 = <span class="k">1,43</span><br>
+            P(score) = Poisson(λ<sub>t</sub>) × Poisson(λ<sub>u</sub>)
+          </div>
+        </div>
+
+        <!-- Gewichten-breakdown -->
+        <div class="weights">
+          <div class="weight-row">
+            <div class="weight-name"><b>Vorm</b><span class="pct mono">40%</span></div>
+            <div class="weight-vis">
+              <span class="weight-track"><span class="fill" data-w="40" style="width:0"></span></span>
+              <span class="weight-scores"><span class="h">1,62</span><span class="sep">/</span><span class="a">0,94</span></span>
+            </div>
+          </div>
+          <div class="weight-row">
+            <div class="weight-name"><b>Onderling (H2H)</b><span class="pct mono">30%</span></div>
+            <div class="weight-vis">
+              <span class="weight-track"><span class="fill" data-w="30" style="width:0"></span></span>
+              <span class="weight-scores"><span class="h">1,20</span><span class="sep">/</span><span class="a">0,55</span></span>
+            </div>
+          </div>
+          <div class="weight-row">
+            <div class="weight-name"><b>FIFA-ranking</b><span class="pct mono">20%</span></div>
+            <div class="weight-vis">
+              <span class="weight-track"><span class="fill" data-w="20" style="width:0"></span></span>
+              <span class="weight-scores"><span class="h">1,35</span><span class="sep">/</span><span class="a">0,78</span></span>
+            </div>
+          </div>
+          <div class="weight-row">
+            <div class="weight-name"><b>WK-historie</b><span class="pct mono">10%</span></div>
+            <div class="weight-vis">
+              <span class="weight-track"><span class="fill" data-w="10" style="width:0"></span></span>
+              <span class="weight-scores"><span class="h">1,50</span><span class="sep">/</span><span class="a">0,40</span></span>
+            </div>
+          </div>
+          <div class="formula" style="margin-top:18px">
+            FIFA: 🇳🇱 #6 (1744 pt) · 🇸🇳 #18 (1503 pt)<br>
+            H2H: 3 duels — 🇳🇱 <span class="k">2</span>W · 1 gelijk · 🇸🇳 <span class="k">0</span>W<br>
+            Vorm: 🇳🇱 laatste 5 = <span class="k">W W G W W</span> · 🇸🇳 = W G V W G
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <span>GOALCAST · Poisson-gebaseerde scorelijnvoorspeller voor het WK 2026</span>
+  <span class="mono">Model v2.4 · berekend 7 jun 2026, 14:20</span>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

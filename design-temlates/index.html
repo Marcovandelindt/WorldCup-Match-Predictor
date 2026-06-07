@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GOALCAST — Dashboard · WK 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+
+<!-- ============ TOPBAR ============ -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"></span>
+      <span class="brand-name">GOAL<span>CAST</span></span>
+    </a>
+    <nav class="nav">
+      <a class="nav-link is-active" href="index.html">Dashboard</a>
+      <a class="nav-link" href="resultaten.html">Resultaten</a>
+      <a class="nav-link" href="statistieken.html">Statistieken</a>
+    </nav>
+    <div class="topbar-right">
+      <span class="season-chip">WK 2026 · 🇺🇸🇨🇦🇲🇽</span>
+      <span class="points-pill"><span>Punten</span><strong>174</strong></span>
+    </div>
+  </div>
+</header>
+
+<main class="page" data-screen-label="Dashboard">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Seizoensoverzicht</p>
+      <h1 class="page-title">Dashboard</h1>
+    </div>
+    <div class="page-head-meta">
+      <span class="live-dot"></span>
+      Achtste finales · bijgewerkt 7 jun 2026, 14:20
+    </div>
+  </div>
+
+  <!-- ============ STATKAARTEN ============ -->
+  <section class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="stat-label">Totaal voorspeld</span>
+        <span class="stat-ico">🎯</span>
+      </div>
+      <div class="stat-value mono">48</div>
+      <div class="stat-foot">
+        <span class="delta flat">41 gespeeld</span>
+        <small>7 aankomend</small>
+      </div>
+      <svg class="spark" width="74" height="26" viewBox="0 0 74 26" fill="none">
+        <polyline points="0,20 12,16 24,18 36,10 48,12 60,6 74,4" stroke="#16c172" stroke-width="2" fill="none" opacity=".55"/>
+      </svg>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="stat-label">Exact correct</span>
+        <span class="stat-ico">✅</span>
+      </div>
+      <div class="stat-value mono">26,8<span class="unit">%</span></div>
+      <div class="stat-foot">
+        <span class="delta up">▲ 3,1</span>
+        <small>11 van 41 wedstrijden</small>
+      </div>
+      <svg class="spark" width="74" height="26" viewBox="0 0 74 26" fill="none">
+        <polyline points="0,18 12,20 24,14 36,15 48,9 60,11 74,7" stroke="#16c172" stroke-width="2" fill="none" opacity=".55"/>
+      </svg>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="stat-label">Winnaar correct</span>
+        <span class="stat-ico">🏆</span>
+      </div>
+      <div class="stat-value mono">65,9<span class="unit">%</span></div>
+      <div class="stat-foot">
+        <span class="delta up">▲ 1,8</span>
+        <small>27 van 41 wedstrijden</small>
+      </div>
+      <svg class="spark" width="74" height="26" viewBox="0 0 74 26" fill="none">
+        <polyline points="0,14 12,12 24,13 36,9 48,10 60,8 74,6" stroke="#16c172" stroke-width="2" fill="none" opacity=".55"/>
+      </svg>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="stat-label">Totaal punten</span>
+        <span class="stat-ico">⚡</span>
+      </div>
+      <div class="stat-value mono">174</div>
+      <div class="stat-foot">
+        <span class="delta up">▲ 18</span>
+        <small>gem. 4,2 / wedstrijd</small>
+      </div>
+      <svg class="spark" width="74" height="26" viewBox="0 0 74 26" fill="none">
+        <polyline points="0,22 12,19 24,17 36,14 48,12 60,7 74,3" stroke="#16c172" stroke-width="2" fill="none" opacity=".55"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============ AANKOMENDE WEDSTRIJDEN ============ -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Aankomende wedstrijden <span class="count">7</span></h2>
+      <span class="section-sub">Achtste finales · 21–24 jun 2026</span>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr>
+              <th style="width:150px">Datum</th>
+              <th>Wedstrijd</th>
+              <th style="width:120px">Fase</th>
+              <th style="width:200px" class="t-right">Actie</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num dim">zo 21 jun<br><span class="dim">21:00</span></td>
+              <td>
+                <div class="match-grid">
+                  <span class="team home"><span class="team-name">Nederland</span><span class="flag">🇳🇱</span></span>
+                  <span class="vs">vs</span>
+                  <span class="team"><span class="flag">🇸🇳</span><span class="team-name">Senegal</span></span>
+                </div>
+              </td>
+              <td><span class="badge">Achtste F.</span></td>
+              <td class="t-right"><a class="btn btn-primary btn-sm" href="voorspelling.html" data-generate><span class="ico">⚡</span> Genereer voorspelling</a></td>
+            </tr>
+            <tr>
+              <td class="num dim">zo 21 jun<br><span class="dim">18:00</span></td>
+              <td>
+                <div class="match-grid">
+                  <span class="team home"><span class="team-name">Brazilië</span><span class="flag">🇧🇷</span></span>
+                  <span class="vs">vs</span>
+                  <span class="team"><span class="flag">🇰🇷</span><span class="team-name">Zuid-Korea</span></span>
+                </div>
+              </td>
+              <td><span class="badge">Achtste F.</span></td>
+              <td class="t-right"><a class="btn btn-primary btn-sm" href="voorspelling.html" data-generate><span class="ico">⚡</span> Genereer voorspelling</a></td>
+            </tr>
+            <tr>
+              <td class="num dim">ma 22 jun<br><span class="dim">21:00</span></td>
+              <td>
+                <div class="match-grid">
+                  <span class="team home"><span class="team-name">Frankrijk</span><span class="flag">🇫🇷</span></span>
+                  <span class="vs">vs</span>
+                  <span class="team"><span class="flag">🇲🇦</span><span class="team-name">Marokko</span></span>
+                </div>
+              </td>
+              <td><span class="badge">Achtste F.</span></td>
+              <td class="t-right"><a class="btn btn-primary btn-sm" href="voorspelling.html" data-generate><span class="ico">⚡</span> Genereer voorspelling</a></td>
+            </tr>
+            <tr>
+              <td class="num dim">ma 22 jun<br><span class="dim">18:00</span></td>
+              <td>
+                <div class="match-grid">
+                  <span class="team home"><span class="team-name">Argentinië</span><span class="flag">🇦🇷</span></span>
+                  <span class="vs">vs</span>
+                  <span class="team"><span class="flag">🇨🇭</span><span class="team-name">Zwitserland</span></span>
+                </div>
+              </td>
+              <td><span class="badge">Achtste F.</span></td>
+              <td class="t-right"><a class="btn btn-primary btn-sm" href="voorspelling.html" data-generate><span class="ico">⚡</span> Genereer voorspelling</a></td>
+            </tr>
+            <tr>
+              <td class="num dim">di 23 jun<br><span class="dim">21:00</span></td>
+              <td>
+                <div class="match-grid">
+                  <span class="team home"><span class="team-name">Spanje</span><span class="flag">🇪🇸</span></span>
+                  <span class="vs">vs</span>
+                  <span class="team"><span class="flag">🇭🇷</span><span class="team-name">Kroatië</span></span>
+                </div>
+              </td>
+              <td><span class="badge">Achtste F.</span></td>
+              <td class="t-right"><a class="btn btn-primary btn-sm" href="voorspelling.html" data-generate><span class="ico">⚡</span> Genereer voorspelling</a></td>
+            </tr>
+            <tr>
+              <td class="num dim">di 23 jun<br><span class="dim">18:00</span></td>
+              <td>
+                <div class="match-grid">
+                  <span class="team home"><span class="team-name">Portugal</span><span class="flag">🇵🇹</span></span>
+                  <span class="vs">vs</span>
+                  <span class="team"><span class="flag">🇺🇾</span><span class="team-name">Uruguay</span></span>
+                </div>
+              </td>
+              <td><span class="badge">Achtste F.</span></td>
+              <td class="t-right"><a class="btn btn-primary btn-sm" href="voorspelling.html" data-generate><span class="ico">⚡</span> Genereer voorspelling</a></td>
+            </tr>
+            <tr>
+              <td class="num dim">wo 24 jun<br><span class="dim">21:00</span></td>
+              <td>
+                <div class="match-grid">
+                  <span class="team home"><span class="team-name">Duitsland</span><span class="flag">🇩🇪</span></span>
+                  <span class="vs">vs</span>
+                  <span class="team"><span class="flag">🇯🇵</span><span class="team-name">Japan</span></span>
+                </div>
+              </td>
+              <td><span class="badge">Achtste F.</span></td>
+              <td class="t-right"><a class="btn btn-primary btn-sm" href="voorspelling.html" data-generate><span class="ico">⚡</span> Genereer voorspelling</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GESPEELDE WEDSTRIJDEN ============ -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Gespeelde wedstrijden <span class="count">41</span></h2>
+      <div class="legend">
+        <span class="legend-item"><span class="status-dot exact"></span> Exacte score</span>
+        <span class="legend-item"><span class="status-dot winner"></span> Winnaar correct</span>
+        <span class="legend-item"><span class="status-dot wrong"></span> Fout</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr>
+              <th style="width:96px">Datum</th>
+              <th>Wedstrijd</th>
+              <th style="width:90px" class="t-center">Voorspeld</th>
+              <th style="width:90px" class="t-center">Uitslag</th>
+              <th style="width:64px" class="t-right">Punten</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="r-exact" data-href="voorspelling.html">
+              <td class="num dim">18 jun</td>
+              <td><div class="match-grid"><span class="team home"><span class="team-name">Nederland</span><span class="flag">🇳🇱</span></span><span class="vs">2–0</span><span class="team"><span class="flag">🇪🇨</span><span class="team-name">Ecuador</span></span></div></td>
+              <td class="t-center"><span class="score pred">2–0</span></td>
+              <td class="t-center"><span class="score real win">2–0</span></td>
+              <td class="t-right"><span class="pts pos">+10</span></td>
+            </tr>
+            <tr class="r-winner" data-href="voorspelling.html">
+              <td class="num dim">18 jun</td>
+              <td><div class="match-grid"><span class="team home"><span class="team-name">Argentinië</span><span class="flag">🇦🇷</span></span><span class="vs">2–0</span><span class="team"><span class="flag">🇳🇬</span><span class="team-name">Nigeria</span></span></div></td>
+              <td class="t-center"><span class="score pred">2–0</span></td>
+              <td class="t-center"><span class="score real">3–1</span></td>
+              <td class="t-right"><span class="pts mid">+4</span></td>
+            </tr>
+            <tr class="r-wrong" data-href="voorspelling.html">
+              <td class="num dim">17 jun</td>
+              <td><div class="match-grid"><span class="team home"><span class="team-name">Frankrijk</span><span class="flag">🇫🇷</span></span><span class="vs">2–1</span><span class="team"><span class="flag">🇩🇰</span><span class="team-name">Denemarken</span></span></div></td>
+              <td class="t-center"><span class="score pred">2–1</span></td>
+              <td class="t-center"><span class="score real">1–1</span></td>
+              <td class="t-right"><span class="pts zero">0</span></td>
+            </tr>
+            <tr class="r-exact" data-href="voorspelling.html">
+              <td class="num dim">17 jun</td>
+              <td><div class="match-grid"><span class="team home"><span class="team-name">Duitsland</span><span class="flag">🇩🇪</span></span><span class="vs">1–1</span><span class="team"><span class="flag">🇲🇽</span><span class="team-name">Mexico</span></span></div></td>
+              <td class="t-center"><span class="score pred">1–1</span></td>
+              <td class="t-center"><span class="score real win">1–1</span></td>
+              <td class="t-right"><span class="pts pos">+10</span></td>
+            </tr>
+            <tr class="r-winner" data-href="voorspelling.html">
+              <td class="num dim">16 jun</td>
+              <td><div class="match-grid"><span class="team home"><span class="team-name">Brazilië</span><span class="flag">🇧🇷</span></span><span class="vs">2–0</span><span class="team"><span class="flag">🇷🇸</span><span class="team-name">Servië</span></span></div></td>
+              <td class="t-center"><span class="score pred">2–0</span></td>
+              <td class="t-center"><span class="score real">1–0</span></td>
+              <td class="t-right"><span class="pts mid">+4</span></td>
+            </tr>
+            <tr class="r-wrong" data-href="voorspelling.html">
+              <td class="num dim">16 jun</td>
+              <td><div class="match-grid"><span class="team home"><span class="team-name">Spanje</span><span class="flag">🇪🇸</span></span><span class="vs">1–1</span><span class="team"><span class="flag">🇯🇵</span><span class="team-name">Japan</span></span></div></td>
+              <td class="t-center"><span class="score pred">1–1</span></td>
+              <td class="t-center"><span class="score real">0–2</span></td>
+              <td class="t-right"><span class="pts zero">0</span></td>
+            </tr>
+            <tr class="r-exact" data-href="voorspelling.html">
+              <td class="num dim">15 jun</td>
+              <td><div class="match-grid"><span class="team home"><span class="team-name">Kroatië</span><span class="flag">🇭🇷</span></span><span class="vs">1–0</span><span class="team"><span class="flag">🇲🇦</span><span class="team-name">Marokko</span></span></div></td>
+              <td class="t-center"><span class="score pred">1–0</span></td>
+              <td class="t-center"><span class="score real win">1–0</span></td>
+              <td class="t-right"><span class="pts pos">+10</span></td>
+            </tr>
+            <tr class="r-winner" data-href="voorspelling.html">
+              <td class="num dim">15 jun</td>
+              <td><div class="match-grid"><span class="team home"><span class="team-name">Portugal</span><span class="flag">🇵🇹</span></span><span class="vs">3–1</span><span class="team"><span class="flag">🇬🇭</span><span class="team-name">Ghana</span></span></div></td>
+              <td class="t-center"><span class="score pred">3–1</span></td>
+              <td class="t-center"><span class="score real">2–1</span></td>
+              <td class="t-right"><span class="pts mid">+4</span></td>
+            </tr>
+            <tr class="r-wrong" data-href="voorspelling.html">
+              <td class="num dim">14 jun</td>
+              <td><div class="match-grid"><span class="team home"><span class="team-name">België</span><span class="flag">🇧🇪</span></span><span class="vs">2–1</span><span class="team"><span class="flag">🇨🇦</span><span class="team-name">Canada</span></span></div></td>
+              <td class="t-center"><span class="score pred">2–1</span></td>
+              <td class="t-center"><span class="score real">0–1</span></td>
+              <td class="t-right"><span class="pts zero">0</span></td>
+            </tr>
+            <tr class="r-exact" data-href="voorspelling.html">
+              <td class="num dim">14 jun</td>
+              <td><div class="match-grid"><span class="team home"><span class="team-name">Zwitserland</span><span class="flag">🇨🇭</span></span><span class="vs">1–0</span><span class="team"><span class="flag">🇨🇲</span><span class="team-name">Kameroen</span></span></div></td>
+              <td class="t-center"><span class="score pred">1–0</span></td>
+              <td class="t-center"><span class="score real win">1–0</span></td>
+              <td class="t-right"><span class="pts pos">+10</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <span>GOALCAST · Poisson-gebaseerde scorelijnvoorspeller voor het WK 2026</span>
+  <span class="mono">Model v2.4 · vorm 40 · h2h 30 · fifa 20 · historie 10</span>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
