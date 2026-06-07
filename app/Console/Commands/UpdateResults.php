@@ -35,6 +35,7 @@ class UpdateResults extends Command
 
             $scorer->evaluate($match->prediction, $match);
             $count++;
+            sleep(7);
         }
 
         $this->info("{$count} wedstrijden gescoord.");

@@ -15,13 +15,9 @@ class FormAnalyzer
             ->get();
 
         if ($matches->isEmpty()) {
-            return [
-                'attack_strength'  => 1.0,
-                'defense_weakness' => 1.0,
-                'avg_scored'       => $wcAvg,
-                'avg_conceded'     => $wcAvg,
-                'matches_analyzed' => 0,
-            ];
+            throw new \RuntimeException(
+                "Geen form data gevonden voor team ID {$teamId}. Draai eerst wk:import-team-data."
+            );
         }
 
         $avgScored   = $matches->avg('goals_scored');

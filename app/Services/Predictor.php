@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\FootballMatch;
 use App\Models\Prediction;
+use App\Models\TeamH2hMatch;
+use App\Models\TeamRecentMatch;
 use App\Services\Analyzers\FifaRankingAnalyzer;
 use App\Services\Analyzers\FormAnalyzer;
 use App\Services\Analyzers\HeadToHeadAnalyzer;
@@ -25,6 +27,20 @@ class Predictor
         $homeTeam = $match->homeTeam;
         $awayTeam = $match->awayTeam;
         $wcAvg    = (float) config('services.football_data.wc_average_goals', 1.30);
+
+        $hasFormHome = TeamRecentMatch::where('team_id', $homeTeam->id)->exists();
+        $hasFormAway = TeamRecentMatch::where('team_id', $awayTeam->id)->exists();
+        $hasH2h      = TeamH2hMatch::where(function ($q) use ($homeTeam, $awayTeam) {
+                $q->where('home_team_id', $homeTeam->id)->where('away_team_id', $awayTeam->id);
+            })->orWhere(function ($q) use ($homeTeam, $awayTeam) {
+                $q->where('home_team_id', $awayTeam->id)->where('away_team_id', $homeTeam->id);
+            })->exists();
+
+        if (! $hasFormHome || ! $hasFormAway || ! $hasH2h) {
+            throw new \RuntimeException(
+                "Onvoldoende data om voorspelling te genereren voor wedstrijd ID {$match->id}. Draai eerst wk:import-team-data."
+            );
+        }
 
         $formHome = $this->form->calculate($homeTeam->id);
         $formAway = $this->form->calculate($awayTeam->id);

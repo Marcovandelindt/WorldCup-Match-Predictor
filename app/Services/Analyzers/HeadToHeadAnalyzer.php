@@ -23,13 +23,9 @@ class HeadToHeadAnalyzer
             ->get();
 
         if ($matches->isEmpty()) {
-            return [
-                'attack_strength_home'  => 1.0,
-                'defense_weakness_home' => 1.0,
-                'attack_strength_away'  => 1.0,
-                'defense_weakness_away' => 1.0,
-                'matches_analyzed'      => 0,
-            ];
+            throw new \RuntimeException(
+                "Geen H2H data gevonden voor teams {$homeTeamId} vs {$awayTeamId}. Draai eerst wk:import-team-data."
+            );
         }
 
         $homeScored = $awayScored = [];
