@@ -1,3 +1,4 @@
+import 'flag-icons/css/flag-icons.min.css';
 import './dashboard.js';
 import './statistics.js';
 

@@ -72,11 +72,11 @@
                     <span class="match-grid">
                         <span class="team home">
                             <span class="team-name">{{ $match->homeTeam->name }}</span>
-                            <span class="flag">{{ $match->homeTeam->flag_emoji ?? '🏴' }}</span>
+                            <span class="flag fi fi-{{ $match->homeTeam->flag_emoji ?? 'xx' }}"></span>
                         </span>
                         <span class="fx-vs">vs</span>
                         <span class="team">
-                            <span class="flag">{{ $match->awayTeam->flag_emoji ?? '🏴' }}</span>
+                            <span class="flag fi fi-{{ $match->awayTeam->flag_emoji ?? 'xx' }}"></span>
                             <span class="team-name">{{ $match->awayTeam->name }}</span>
                         </span>
                     </span>

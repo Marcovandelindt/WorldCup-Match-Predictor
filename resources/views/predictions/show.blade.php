@@ -19,7 +19,7 @@
 
         <div class="hero-teams">
             <div class="hero-team">
-                <span class="hero-flag">{{ $match->homeTeam->flag_emoji ?? '🏴' }}</span>
+                <span class="hero-flag fi fi-{{ $match->homeTeam->flag_emoji ?? 'xx' }}"></span>
                 <span class="hero-team-name">{{ $match->homeTeam->name }}</span>
             </div>
             <div class="hero-center">
@@ -41,7 +41,7 @@
                 @endif
             </div>
             <div class="hero-team">
-                <span class="hero-flag">{{ $match->awayTeam->flag_emoji ?? '🏴' }}</span>
+                <span class="hero-flag fi fi-{{ $match->awayTeam->flag_emoji ?? 'xx' }}"></span>
                 <span class="hero-team-name">{{ $match->awayTeam->name }}</span>
             </div>
         </div>
@@ -118,7 +118,7 @@
                         <div class="meta">
                             <span class="greek">λ thuis</span>
                             <span class="team-mini">
-                                <span class="flag">{{ $match->homeTeam->flag_emoji ?? '🏴' }}</span>
+                                <span class="flag fi fi-{{ $match->homeTeam->flag_emoji ?? 'xx' }}"></span>
                                 {{ $match->homeTeam->name }}
                             </span>
                         </div>
@@ -128,7 +128,7 @@
                         <div class="meta">
                             <span class="greek">λ uit</span>
                             <span class="team-mini">
-                                <span class="flag">{{ $match->awayTeam->flag_emoji ?? '🏴' }}</span>
+                                <span class="flag fi fi-{{ $match->awayTeam->flag_emoji ?? 'xx' }}"></span>
                                 {{ $match->awayTeam->name }}
                             </span>
                         </div>

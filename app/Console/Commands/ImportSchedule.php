@@ -28,15 +28,25 @@ class ImportSchedule extends Command
             }
 
             foreach (['homeTeam', 'awayTeam'] as $side) {
-                $created = Team::firstOrCreate(
+                $tla  = $match[$side]['tla'] ?? '';
+                $flag = $this->flagFromTla($tla);
+
+                $team = Team::firstOrCreate(
                     ['api_id' => $match[$side]['id']],
                     [
                         'name'       => $match[$side]['name'],
                         'short_name' => $match[$side]['shortName'] ?? null,
-                        'fifa_code'  => $match[$side]['tla'] ?? null,
+                        'fifa_code'  => $tla ?: null,
+                        'flag_emoji' => $flag,
                     ]
                 );
-                if ($created->wasRecentlyCreated) {
+
+                // Vul vlag in voor bestaande teams die nog geen emoji hebben
+                if (! $team->wasRecentlyCreated && empty($team->flag_emoji) && $flag !== '') {
+                    $team->update(['flag_emoji' => $flag]);
+                }
+
+                if ($team->wasRecentlyCreated) {
                     $teamCount++;
                 }
             }
@@ -82,5 +92,65 @@ class ImportSchedule extends Command
             'POSTPONED', 'CANCELLED', 'SUSPENDED' => 'POSTPONED',
             default                             => 'SCHEDULED',
         };
+    }
+
+    private function flagFromTla(string $tla): string
+    {
+        // Subdivision flags — flag-icons gebruikt gb-eng, gb-sct, gb-wls
+        $subdivisions = [
+            'ENG' => 'gb-eng',
+            'SCO' => 'gb-sct',
+            'WAL' => 'gb-wls',
+        ];
+
+        if (isset($subdivisions[$tla])) {
+            return $subdivisions[$tla];
+        }
+
+        // FIFA TLA → ISO 3166-1 alpha-2 (lowercase, voor flag-icons CSS-klasse fi-XX)
+        $map = [
+            'AFG' => 'af', 'ALB' => 'al', 'ALG' => 'dz', 'AND' => 'ad', 'ANG' => 'ao',
+            'ANT' => 'ag', 'ARG' => 'ar', 'ARM' => 'am', 'ARU' => 'aw', 'ASA' => 'as',
+            'AUS' => 'au', 'AUT' => 'at', 'AZE' => 'az', 'BAH' => 'bs', 'BAN' => 'bd',
+            'BDI' => 'bi', 'BEL' => 'be', 'BEN' => 'bj', 'BER' => 'bm', 'BHU' => 'bt',
+            'BIH' => 'ba', 'BLR' => 'by', 'BLZ' => 'bz', 'BOL' => 'bo', 'BOT' => 'bw',
+            'BRA' => 'br', 'BRB' => 'bb', 'BRU' => 'bn', 'BUL' => 'bg', 'BUR' => 'bf',
+            'CAM' => 'kh', 'CAN' => 'ca', 'CAY' => 'ky', 'CGO' => 'cg', 'CHA' => 'td',
+            'CHI' => 'cl', 'CHN' => 'cn', 'CIV' => 'ci', 'CMR' => 'cm', 'COD' => 'cd',
+            'COL' => 'co', 'COM' => 'km', 'CPV' => 'cv', 'CRC' => 'cr', 'CRO' => 'hr',
+            'CUB' => 'cu', 'CYP' => 'cy', 'CZE' => 'cz', 'DEN' => 'dk', 'DJI' => 'dj',
+            'DMA' => 'dm', 'DOM' => 'do', 'ECU' => 'ec', 'EGY' => 'eg', 'EQG' => 'gq',
+            'ERI' => 'er', 'ESP' => 'es', 'EST' => 'ee', 'ETH' => 'et', 'FIJ' => 'fj',
+            'FIN' => 'fi', 'FRA' => 'fr', 'FRO' => 'fo', 'GAB' => 'ga', 'GAM' => 'gm',
+            'GEO' => 'ge', 'GER' => 'de', 'GHA' => 'gh', 'GIB' => 'gi', 'GNB' => 'gw',
+            'GRE' => 'gr', 'GRN' => 'gd', 'GUA' => 'gt', 'GUI' => 'gn', 'GUM' => 'gu',
+            'GUY' => 'gy', 'HAI' => 'ht', 'HKG' => 'hk', 'HON' => 'hn', 'HUN' => 'hu',
+            'IDN' => 'id', 'IND' => 'in', 'IRL' => 'ie', 'IRN' => 'ir', 'IRQ' => 'iq',
+            'ISL' => 'is', 'ISR' => 'il', 'ITA' => 'it', 'JAM' => 'jm', 'JOR' => 'jo',
+            'JPN' => 'jp', 'KAZ' => 'kz', 'KEN' => 'ke', 'KGZ' => 'kg', 'KOR' => 'kr',
+            'KOS' => 'xk', 'KSA' => 'sa', 'KUW' => 'kw', 'LAO' => 'la', 'LBA' => 'ly',
+            'LBN' => 'lb', 'LBR' => 'lr', 'LCA' => 'lc', 'LES' => 'ls', 'LIE' => 'li',
+            'LTU' => 'lt', 'LUX' => 'lu', 'LVA' => 'lv', 'MAC' => 'mo', 'MAD' => 'mg',
+            'MAR' => 'ma', 'MAS' => 'my', 'MDA' => 'md', 'MDV' => 'mv', 'MEX' => 'mx',
+            'MKD' => 'mk', 'MLI' => 'ml', 'MLT' => 'mt', 'MNE' => 'me', 'MON' => 'mc',
+            'MOZ' => 'mz', 'MRI' => 'mu', 'MTN' => 'mr', 'MWI' => 'mw', 'MYA' => 'mm',
+            'NAM' => 'na', 'NCA' => 'ni', 'NED' => 'nl', 'NEP' => 'np', 'NGA' => 'ng',
+            'NOR' => 'no', 'NZL' => 'nz', 'OMA' => 'om', 'PAK' => 'pk', 'PAN' => 'pa',
+            'PAR' => 'py', 'PER' => 'pe', 'PHI' => 'ph', 'PLE' => 'ps', 'PNG' => 'pg',
+            'POL' => 'pl', 'POR' => 'pt', 'PRK' => 'kp', 'PUR' => 'pr', 'QAT' => 'qa',
+            'ROU' => 'ro', 'RSA' => 'za', 'RUS' => 'ru', 'RWA' => 'rw', 'SAM' => 'ws',
+            'SEN' => 'sn', 'SIN' => 'sg', 'SKN' => 'kn', 'SLE' => 'sl', 'SLV' => 'sv',
+            'SMR' => 'sm', 'SOL' => 'sb', 'SOM' => 'so', 'SRB' => 'rs', 'SRI' => 'lk',
+            'SSD' => 'ss', 'STP' => 'st', 'SUD' => 'sd', 'SUI' => 'ch', 'SUR' => 'sr',
+            'SVK' => 'sk', 'SVN' => 'si', 'SWE' => 'se', 'SWZ' => 'sz', 'SYR' => 'sy',
+            'TAH' => 'pf', 'TAN' => 'tz', 'TGA' => 'to', 'THA' => 'th', 'TJK' => 'tj',
+            'TKM' => 'tm', 'TLS' => 'tl', 'TOG' => 'tg', 'TPE' => 'tw', 'TRI' => 'tt',
+            'TUN' => 'tn', 'TUR' => 'tr', 'TUV' => 'tv', 'UAE' => 'ae', 'UGA' => 'ug',
+            'UKR' => 'ua', 'URU' => 'uy', 'USA' => 'us', 'UZB' => 'uz', 'VAN' => 'vu',
+            'VEN' => 've', 'VGB' => 'vg', 'VIE' => 'vn', 'VIN' => 'vc', 'YEM' => 'ye',
+            'ZAM' => 'zm', 'ZIM' => 'zw',
+        ];
+
+        return $map[$tla] ?? '';
     }
 }
