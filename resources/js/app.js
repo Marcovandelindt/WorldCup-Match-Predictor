@@ -1,6 +1,25 @@
 import './dashboard.js';
 import './statistics.js';
 
+// Import notice — dismiss for rest of day via localStorage
+document.addEventListener('DOMContentLoaded', () => {
+    const notice = document.getElementById('importNotice');
+    if (!notice) return;
+
+    const key = 'importNoticeHidden_' + new Date().toISOString().slice(0, 10);
+
+    if (localStorage.getItem(key)) {
+        notice.remove();
+        return;
+    }
+
+    document.getElementById('importNoticeClose').addEventListener('click', () => {
+        localStorage.setItem(key, '1');
+        notice.classList.add('is-hiding');
+        setTimeout(() => notice.remove(), 300);
+    });
+});
+
 // Animated bar fills (prediction page + statistics comparison)
 document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(() => {

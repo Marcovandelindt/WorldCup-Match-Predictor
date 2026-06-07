@@ -35,6 +35,19 @@
     </div>
 </header>
 
+@if($showImportNotice ?? false)
+<div class="import-notice" id="importNotice">
+    <div class="import-notice-inner">
+        <span class="import-notice-ico">⚠</span>
+        <div class="import-notice-body">
+            <strong>Knockout fase nog niet geïmporteerd</strong>
+            <span>Draai <code>php artisan wk:import-schedule</code> opnieuw na de groepsfase om R16, kwartfinales, halve finales en de finale in te laden.</span>
+        </div>
+        <button class="import-notice-close" id="importNoticeClose" aria-label="Melding sluiten">✕</button>
+    </div>
+</div>
+@endif
+
 @yield('content')
 
 <footer class="foot">

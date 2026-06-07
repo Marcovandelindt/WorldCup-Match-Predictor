@@ -299,6 +299,82 @@ tr.r-wrong:hover  { background: rgba(239, 71, 87, .07); }
     }
 }
 
+// ── Import notice ─────────────────────────────────────────────────────────────
+.import-notice {
+    background: rgba(245, 166, 35, .07);
+    border-bottom: 1px solid rgba(245, 166, 35, .18);
+    overflow: hidden;
+    transition: opacity .25s ease, max-height .3s ease, padding .3s ease;
+
+    &.is-hiding {
+        opacity: 0;
+        max-height: 0 !important;
+        padding-block: 0;
+    }
+}
+
+.import-notice-inner {
+    max-width: v.$maxw;
+    margin: 0 auto;
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.import-notice-ico {
+    font-size: 1rem;
+    color: v.$color-orange;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.import-notice-body {
+    flex: 1;
+    font-size: .845rem;
+    line-height: 1.45;
+
+    strong {
+        display: block;
+        color: v.$color-orange;
+        font-weight: 600;
+        margin-bottom: 2px;
+        font-size: .85rem;
+    }
+
+    span { color: v.$color-text-dim; }
+
+    code {
+        font-family: v.$font-mono;
+        font-size: .8em;
+        color: v.$color-text;
+        background: v.$color-surface-2;
+        border: 1px solid v.$color-border;
+        border-radius: 4px;
+        padding: 1px 6px;
+    }
+}
+
+.import-notice-close {
+    flex-shrink: 0;
+    background: none;
+    border: 1px solid transparent;
+    color: v.$color-text-mute;
+    cursor: pointer;
+    font-size: .78rem;
+    padding: 4px 8px;
+    border-radius: v.$r-sm;
+    font-family: v.$font-sans;
+    transition: color .15s, background .15s, border-color .15s;
+    line-height: 1;
+
+    &:hover {
+        color: v.$color-text;
+        background: v.$color-surface-2;
+        border-color: v.$color-border;
+    }
+}
+
 // ── Legend ───────────────────────────────────────────────────────────────────
 .legend {
     display: flex;
