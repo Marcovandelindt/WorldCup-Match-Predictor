@@ -19,32 +19,32 @@ class ImportTeamData extends Command
         $teams   = Team::all();
         $matches = FootballMatch::with(['homeTeam', 'awayTeam'])->get();
 
-        $this->info("Recente wedstrijden ophalen voor {$teams->count()} teams...");
-        $bar = $this->output->createProgressBar($teams->count());
-        $bar->start();
+        $teamTotal  = $teams->count();
+        $matchTotal = $matches->count();
 
-        foreach ($teams as $team) {
+        $this->info("Stap 1/2 — Recente wedstrijden ophalen voor {$teamTotal} teams");
+
+        foreach ($teams as $i => $team) {
+            $this->line(sprintf('[%d/%d] %s — recente wedstrijden ophalen...', $i + 1, $teamTotal, $team->name));
             $this->importRecentMatches($team, $client);
-            $bar->advance();
-
             sleep(7);
         }
 
-        $bar->finish();
         $this->newLine();
+        $this->info("Stap 2/2 — H2H data ophalen voor {$matchTotal} wedstrijden");
 
-        $this->info("H2H data ophalen voor {$matches->count()} wedstrijden...");
-        $bar = $this->output->createProgressBar($matches->count());
-        $bar->start();
-
-        foreach ($matches as $match) {
+        foreach ($matches as $i => $match) {
+            $this->line(sprintf(
+                '[%d/%d] %s vs %s — H2H ophalen...',
+                $i + 1,
+                $matchTotal,
+                $match->homeTeam->name,
+                $match->awayTeam->name,
+            ));
             $this->importH2h($match, $client);
-            $bar->advance();
-
             sleep(7);
         }
 
-        $bar->finish();
         $this->newLine();
         $this->info('Klaar. Alle data staat in de database — voorspellingen draaien nu volledig offline.');
     }
