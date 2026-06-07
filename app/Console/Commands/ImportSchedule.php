@@ -22,6 +22,11 @@ class ImportSchedule extends Command
         $matchCount = 0;
 
         foreach ($matches as $match) {
+            // Sla wedstrijden over waarbij een van de teams nog niet bekend is (bijv. knockout fase TBD)
+            if (empty($match['homeTeam']['id']) || empty($match['awayTeam']['id'])) {
+                continue;
+            }
+
             foreach (['homeTeam', 'awayTeam'] as $side) {
                 $created = Team::firstOrCreate(
                     ['api_id' => $match[$side]['id']],
