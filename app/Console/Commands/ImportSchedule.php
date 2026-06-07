@@ -45,9 +45,9 @@ class ImportSchedule extends Command
                     'home_team_id' => $homeTeam->id,
                     'away_team_id' => $awayTeam->id,
                     'match_date'   => $match['utcDate'],
-                    'stage'        => $match['stage'],
+                    'stage'        => $this->mapStage($match['stage']),
                     'group_name'   => $match['group'] ?? null,
-                    'status'       => $match['status'],
+                    'status'       => $this->mapStatus($match['status']),
                     'venue'        => $match['venue']['name'] ?? null,
                 ]
             );
@@ -55,5 +55,27 @@ class ImportSchedule extends Command
         }
 
         $this->info("{$teamCount} teams en {$matchCount} wedstrijden geïmporteerd.");
+    }
+
+    private function mapStage(string $apiStage): string
+    {
+        return match($apiStage) {
+            'GROUP_STAGE'           => 'GROUP',
+            'ROUND_OF_16'           => 'R16',
+            'QUARTER_FINAL'         => 'QF',
+            'SEMI_FINAL'            => 'SF',
+            'THIRD_PLACE_PLAY_OFF'  => 'THIRD',
+            default                 => 'FINAL',
+        };
+    }
+
+    private function mapStatus(string $apiStatus): string
+    {
+        return match($apiStatus) {
+            'IN_PLAY', 'PAUSED'                 => 'LIVE',
+            'FINISHED'                          => 'FINISHED',
+            'POSTPONED', 'CANCELLED', 'SUSPENDED' => 'POSTPONED',
+            default                             => 'SCHEDULED',
+        };
     }
 }
