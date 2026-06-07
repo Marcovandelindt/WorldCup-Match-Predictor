@@ -32,11 +32,11 @@ class FootballMatch extends Model
 
     public function prediction(): HasOne
     {
-        return $this->hasOne(Prediction::class);
+        return $this->hasOne(Prediction::class, 'match_id');
     }
 
     public function accuracy(): HasOne
     {
-        return $this->hasOne(PredictionAccuracy::class);
+        return $this->hasOne(PredictionAccuracy::class, 'match_id');
     }
 }
