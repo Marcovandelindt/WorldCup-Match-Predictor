@@ -1,0 +1,239 @@
+@use 'variables' as v;
+
+// ── Team hero ────────────────────────────────────────────────────────────────
+.team-hero {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    background: radial-gradient(ellipse at 20% 50%, rgba(22, 193, 114, .08) 0%, transparent 65%),
+                v.$color-surface;
+    border: 1px solid v.$color-border-green;
+    border-radius: v.$r-lg;
+    padding: 28px 30px;
+
+    .crest {
+        font-size: 4.6rem;
+        filter: drop-shadow(0 4px 16px rgba(0, 0, 0, .55));
+        flex-shrink: 0;
+        line-height: 1;
+    }
+
+    .th-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .th-name {
+        font-size: 2.3rem;
+        font-weight: 700;
+        letter-spacing: -.02em;
+        line-height: 1.1;
+        color: v.$color-text;
+    }
+
+    .th-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+    }
+
+    .th-form {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 16px;
+
+        .lbl {
+            font-size: .74rem;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: v.$color-text-mute;
+        }
+    }
+}
+
+// ── Team facts sidebar ───────────────────────────────────────────────────────
+.team-facts {
+    display: flex;
+    gap: 26px;
+    flex-shrink: 0;
+    padding-left: 28px;
+    border-left: 1px solid v.$color-border;
+}
+
+.team-fact {
+    text-align: center;
+
+    .v {
+        display: block;
+        font-family: v.$font-mono;
+        font-weight: 700;
+        font-size: 1.7rem;
+        letter-spacing: -.02em;
+        color: v.$color-text;
+
+        &.green { color: v.$color-green-bright; }
+    }
+
+    .l {
+        display: block;
+        font-size: .7rem;
+        color: v.$color-text-dim;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        margin-top: 4px;
+    }
+}
+
+// ── Form pills ───────────────────────────────────────────────────────────────
+.form-pills {
+    display: inline-flex;
+    gap: 5px;
+}
+
+.fp {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    display: grid;
+    place-items: center;
+    font-family: v.$font-mono;
+    font-weight: 700;
+    font-size: .76rem;
+    border: 1px solid transparent;
+
+    &.w {
+        background: v.$color-green-soft;
+        color: v.$color-green-bright;
+        border-color: v.$color-border-green;
+    }
+
+    &.g {
+        background: v.$color-surface-3;
+        color: v.$color-text-dim;
+        border-color: v.$color-border;
+    }
+
+    &.v {
+        background: v.$color-red-soft;
+        color: v.$color-red;
+        border-color: rgba(239, 71, 87, .25);
+    }
+}
+
+// ── Ranking block ────────────────────────────────────────────────────────────
+.rank-big {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+
+    .hash {
+        font-family: v.$font-mono;
+        font-size: 1.4rem;
+        color: v.$color-text-mute;
+    }
+
+    .pos {
+        font-family: v.$font-mono;
+        font-weight: 700;
+        font-size: 3rem;
+        letter-spacing: -.02em;
+        color: v.$color-text;
+        line-height: 1;
+    }
+}
+
+.rank-meta {
+    display: flex;
+    gap: 18px;
+    margin-top: 14px;
+
+    .rm {
+        font-size: .82rem;
+
+        b {
+            font-family: v.$font-mono;
+            color: v.$color-text;
+        }
+
+        span {
+            display: block;
+            color: v.$color-text-dim;
+            font-size: .72rem;
+            margin-top: 2px;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+    }
+}
+
+// ── Two-column split layout ──────────────────────────────────────────────────
+.split-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+
+    @media (max-width: 860px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+// ── Fixture row result colouring (for team page) ─────────────────────────────
+.fixture {
+    &.r-w {
+        border-left-color: v.$color-green;
+        background: rgba(22, 193, 114, .04);
+    }
+
+    &.r-d {
+        border-left-color: v.$color-text-mute;
+        background: transparent;
+    }
+
+    &.r-l {
+        border-left-color: v.$color-red;
+        background: rgba(239, 71, 87, .03);
+    }
+}
+
+// ── Outcome pill ─────────────────────────────────────────────────────────────
+.outcome {
+    font-family: v.$font-mono;
+    font-weight: 700;
+    font-size: .82rem;
+
+    &.w { color: v.$color-green-bright; }
+    &.g { color: v.$color-text-dim; }
+    &.v { color: v.$color-red; }
+}
+
+// ── Team name link ────────────────────────────────────────────────────────────
+a.team-name {
+    text-decoration: none;
+    color: inherit;
+    transition: color .14s;
+
+    &:hover { color: v.$color-green-bright; }
+}
+
+// ── Responsive ───────────────────────────────────────────────────────────────
+@media (max-width: 680px) {
+    .team-hero {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .crest { font-size: 3.4rem; }
+        .th-name { font-size: 1.8rem; }
+    }
+
+    .team-facts {
+        border-left: none;
+        border-top: 1px solid v.$color-border;
+        padding-left: 0;
+        padding-top: 18px;
+        width: 100%;
+        justify-content: space-around;
+    }
+}

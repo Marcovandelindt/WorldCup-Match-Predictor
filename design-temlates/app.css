@@ -460,7 +460,6 @@ tr.r-wrong:hover  { background: rgba(239,71,87,.07); }
   background: linear-gradient(90deg, var(--green-dim), var(--green));
   border-radius: 6px;
   transform-origin: left;
-  transition: width .8s cubic-bezier(.22,.61,.36,1);
 }
 .bar-row.top .bar-fill { background: linear-gradient(90deg, var(--green), var(--green-bright)); box-shadow: 0 0 16px var(--green-glow); }
 .bar-row.top .bar-score { color: var(--green-bright); }
@@ -490,7 +489,7 @@ tr.r-wrong:hover  { background: rgba(239,71,87,.07); }
 .weight-name .pct { font-family: var(--mono); font-size: .74rem; color: var(--green); }
 .weight-vis { display: flex; align-items: center; gap: 14px; }
 .weight-track { flex: 1; height: 8px; background: var(--surface-2); border-radius: 999px; overflow: hidden; border: 1px solid var(--border); }
-.weight-track .fill { display: block; height: 100%; background: linear-gradient(90deg, var(--green-dim), var(--green)); border-radius: 999px; }
+.weight-track .fill { display: block; height: 100%; background: linear-gradient(90deg, var(--green-dim), var(--green)); border-radius: 999px; transform-origin: left; }
 .weight-scores { display: flex; gap: 8px; font-family: var(--mono); font-size: .78rem; }
 .weight-scores .h { color: var(--green-bright); }
 .weight-scores .a { color: var(--blue); }
@@ -604,6 +603,77 @@ tr.r-wrong:hover  { background: rgba(239,71,87,.07); }
 .kpi .l { font-size: .74rem; color: var(--text-dim); margin-top: 3px; }
 
 /* ============================================================
+   Teamdetailpagina
+   ============================================================ */
+.team-hero {
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; gap: 28px;
+  background:
+    radial-gradient(620px 280px at 14% -40px, rgba(22,193,114,.16), transparent 70%),
+    var(--surface);
+  border: 1px solid var(--border-green);
+  border-radius: var(--r-xl);
+  padding: 28px 30px;
+}
+.team-hero .crest { font-size: 4.6rem; line-height: 1; filter: drop-shadow(0 4px 10px rgba(0,0,0,.5)); flex-shrink: 0; }
+.team-hero .th-info { flex: 1; min-width: 0; }
+.team-hero .th-name { font-size: 2.3rem; font-weight: 700; letter-spacing: -.02em; }
+.team-hero .th-meta { display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.team-hero .th-form { display: flex; align-items: center; gap: 10px; margin-top: 16px; }
+.team-hero .th-form .lbl { font-size: .74rem; text-transform: uppercase; letter-spacing: .06em; color: var(--text-mute); }
+.team-facts { display: flex; gap: 26px; flex-shrink: 0; padding-left: 28px; border-left: 1px solid var(--border); }
+.team-fact { text-align: center; }
+.team-fact .v { font-family: var(--mono); font-weight: 700; font-size: 1.7rem; }
+.team-fact .v.green { color: var(--green-bright); }
+.team-fact .l { font-size: .7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: .05em; margin-top: 4px; }
+
+/* Vorm-pillen W / G / V */
+.form-pills { display: inline-flex; gap: 5px; }
+.fp { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; font-family: var(--mono); font-weight: 700; font-size: .76rem; }
+.fp.w { background: var(--green-soft); color: var(--green-bright); border: 1px solid var(--border-green); }
+.fp.g { background: var(--surface-3); color: var(--text-dim); border: 1px solid var(--border); }
+.fp.v { background: var(--red-soft); color: var(--red); border: 1px solid rgba(239,71,87,.3); }
+
+/* FIFA-ranking blok */
+.rank-big { display: flex; align-items: baseline; gap: 6px; }
+.rank-big .hash { font-family: var(--mono); font-size: 1.4rem; color: var(--text-mute); }
+.rank-big .pos { font-family: var(--mono); font-weight: 700; font-size: 3rem; letter-spacing: -.02em; }
+.rank-meta { display: flex; gap: 18px; margin-top: 14px; }
+.rank-meta .rm { font-size: .82rem; }
+.rank-meta .rm b { font-family: var(--mono); color: var(--text); }
+.rank-meta .rm span { color: var(--text-dim); display: block; font-size: .72rem; margin-top: 2px; text-transform: uppercase; letter-spacing: .04em; }
+
+/* WK-historiek tijdlijn */
+.wk-history { display: flex; flex-direction: column; }
+.wk-row { display: grid; grid-template-columns: 54px 1fr auto; gap: 14px; align-items: center; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,.045); }
+.wk-row:last-child { border-bottom: none; }
+.wk-year { font-family: var(--mono); font-weight: 600; color: var(--text); }
+.wk-host { color: var(--text-dim); font-size: .85rem; }
+.wk-host .flag { font-size: .95rem; }
+.result-badge { font-family: var(--mono); font-size: .7rem; font-weight: 600; letter-spacing: .04em; padding: 3px 9px; border-radius: 6px; white-space: nowrap; }
+.result-badge.win   { color: #ffd54a; background: rgba(255,213,74,.12); border: 1px solid rgba(255,213,74,.3); }
+.result-badge.final { color: var(--text); background: var(--surface-3); border: 1px solid var(--border-strong); }
+.result-badge.semi  { color: var(--green-bright); background: var(--green-soft); border: 1px solid var(--border-green); }
+.result-badge.quart { color: var(--blue); background: rgba(75,159,255,.1); border: 1px solid rgba(75,159,255,.28); }
+.result-badge.group { color: var(--text-dim); background: var(--surface-2); border: 1px solid var(--border); }
+.result-badge.dnq   { color: var(--red); background: var(--red-soft); border: 1px solid rgba(239,71,87,.28); }
+.result-badge.live  { color: var(--green-bright); background: var(--green-soft); border: 1px solid var(--border-green); }
+
+/* Recente-wedstrijden uitkomst-randen */
+.fixture.r-w { border-left-color: var(--green);     background: rgba(22,193,114,.04); }
+.fixture.r-l { border-left-color: var(--red);       background: rgba(239,71,87,.03); }
+.fixture.r-d { border-left-color: var(--text-mute); }
+.fixture.r-w:hover, .fixture.r-l:hover, .fixture.r-d:hover { background: var(--surface-hover); }
+.outcome { font-family: var(--mono); font-weight: 700; font-size: .82rem; text-align: center; }
+.outcome.w { color: var(--green-bright); }
+.outcome.g { color: var(--text-dim); }
+.outcome.v { color: var(--red); }
+
+/* tweekoloms layout voor team-blokken */
+.split-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 860px) { .split-2 { grid-template-columns: 1fr; } }
+
+/* ============================================================
    Footer
    ============================================================ */
 .foot {
@@ -639,6 +709,10 @@ tr.r-wrong:hover  { background: rgba(239,71,87,.07); }
   .compare-col.left { border-right: none; padding-right: 0; border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 16px; }
   .compare-col.right { padding-left: 0; }
   .foot { flex-direction: column; align-items: flex-start; }
+  .team-hero { flex-direction: column; align-items: flex-start; gap: 18px; }
+  .team-facts { padding-left: 0; border-left: none; border-top: 1px solid var(--border); padding-top: 16px; width: 100%; justify-content: space-between; gap: 12px; }
+  .team-hero .crest { font-size: 3.4rem; }
+  .team-hero .th-name { font-size: 1.8rem; }
 }
 @media (max-width: 420px) {
   .stat-grid { grid-template-columns: 1fr; }

@@ -28,18 +28,4 @@
     var row = e.target.closest("[data-href]");
     if (row) window.location.href = row.getAttribute("data-href");
   });
-
-  /* Staafdiagram-balken animeren bij load */
-  function animateBars() {
-    requestAnimationFrame(function () {
-      document.querySelectorAll(".bar-fill[data-w], .weight-track .fill[data-w], .cbar[data-w]").forEach(function (el) {
-        el.style.width = el.dataset.w + "%";
-      });
-    });
-  }
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", animateBars);
-  } else {
-    animateBars();
-  }
 })();

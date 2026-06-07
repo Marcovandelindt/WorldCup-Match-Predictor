@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(php artisan *)",
+      "Bash(curl -s http://localhost:8001 -o /dev/null -w \"%{http_code}\")",
+      "Bash(curl -s http://localhost:8001/results -o /dev/null -w \"%{http_code}\")",
+      "Bash(curl -s http://localhost:8001/statistics -o /dev/null -w \" %{http_code}\")",
+      "Bash(curl -s http://localhost:8001 -o /dev/null -w \"dashboard: %{http_code}\\\\n\")",
+      "Bash(curl -s http://localhost:8001/results -o /dev/null -w \"results: %{http_code}\\\\n\")",
+      "Bash(curl -s http://localhost:8001/statistics -o /dev/null -w \"statistics: %{http_code}\\\\n\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}

@@ -115,13 +115,13 @@
                             <td>
                                 <div class="match-grid">
                                     <span class="team home">
-                                        <span class="team-name">{{ $match->homeTeam->name }}</span>
+                                        <a class="team-name" href="{{ route('teams.show', $match->homeTeam) }}">{{ $match->homeTeam->name }}</a>
                                         <span class="flag fi fi-{{ $match->homeTeam->flag_emoji ?? 'xx' }}"></span>
                                     </span>
                                     <span class="vs">vs</span>
                                     <span class="team">
                                         <span class="flag fi fi-{{ $match->awayTeam->flag_emoji ?? 'xx' }}"></span>
-                                        <span class="team-name">{{ $match->awayTeam->name }}</span>
+                                        <a class="team-name" href="{{ route('teams.show', $match->awayTeam) }}">{{ $match->awayTeam->name }}</a>
                                     </span>
                                 </div>
                             </td>
@@ -198,13 +198,13 @@
                             <td>
                                 <div class="match-grid">
                                     <span class="team home">
-                                        <span class="team-name">{{ $match->homeTeam->name }}</span>
+                                        <a class="team-name" href="{{ route('teams.show', $match->homeTeam) }}">{{ $match->homeTeam->name }}</a>
                                         <span class="flag fi fi-{{ $match->homeTeam->flag_emoji ?? 'xx' }}"></span>
                                     </span>
                                     <span class="vs">{{ $match->home_score }}–{{ $match->away_score }}</span>
                                     <span class="team">
                                         <span class="flag fi fi-{{ $match->awayTeam->flag_emoji ?? 'xx' }}"></span>
-                                        <span class="team-name">{{ $match->awayTeam->name }}</span>
+                                        <a class="team-name" href="{{ route('teams.show', $match->awayTeam) }}">{{ $match->awayTeam->name }}</a>
                                     </span>
                                 </div>
                             </td>
