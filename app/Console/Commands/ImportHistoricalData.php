@@ -59,8 +59,14 @@ class ImportHistoricalData extends Command
         $resolved         = [];
         $unknownVsWkTeam  = [];
 
+        $today = date('Y-m-d');
+
         foreach ($rows as $row) {
             if ($row['home_score'] === '' || $row['away_score'] === '') {
+                continue;
+            }
+
+            if ($row['date'] > $today) {
                 continue;
             }
 
