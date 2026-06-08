@@ -147,7 +147,7 @@
                         $weights = [
                             ['label' => 'Vorm',            'pct' => $bd['home']['form']['weight'] ?? ($hasH2h ? 0.40 : 0.70)],
                             ['label' => 'Onderling (H2H)', 'pct' => $bd['home']['h2h']['weight']  ?? ($hasH2h ? 0.30 : 0.00)],
-                            ['label' => 'FIFA-ranking',    'pct' => $bd['home']['fifa']['weight'] ?? 0.20],
+                            ['label' => 'Elo-rating',      'pct' => $bd['home']['elo']['weight']  ?? ($bd['home']['fifa']['weight'] ?? 0.20)],
                             ['label' => 'WK-historie',     'pct' => $bd['home']['wc']['weight']   ?? 0.10],
                         ];
                     @endphp
@@ -168,8 +168,8 @@
                     @endforeach
 
                     <div class="formula" style="margin-top:18px">
-                        FIFA: {{ $match->homeTeam->name }} #{{ $match->homeTeam->fifa_ranking ?? '?' }} ·
-                              {{ $match->awayTeam->name }} #{{ $match->awayTeam->fifa_ranking ?? '?' }}<br>
+                        Elo: {{ $match->homeTeam->name }} {{ number_format($bd['home']['elo']['rating'] ?? 1500, 0, ',', '.') }} ·
+                             {{ $match->awayTeam->name }} {{ number_format($bd['away']['elo']['rating'] ?? 1500, 0, ',', '.') }}<br>
                         WK-gemiddelde: {{ number_format($bd['wc_avg'] ?? 1.30, 2, ',', '') }} goals/wedstrijd<br>
                         Berekend op: {{ ($prediction->generated_at ?? now())->format('j M Y, H:i') }}
                     </div>
@@ -232,17 +232,19 @@
                         </tr>
                         @endif
 
-                        @php $fi = $bSide['fifa']; @endphp
+                        @php $ei = $bSide['elo'] ?? $bSide['fifa'] ?? null; @endphp
+                        @if($ei)
                         <tr>
                             <td>
-                                <b>FIFA-ranking</b>
-                                <small>#{{ $fi['ranking'] }}</small>
+                                <b>Elo-rating</b>
+                                <small>{{ number_format($ei['rating'] ?? 0, 0, ',', '.') }} punten</small>
                             </td>
-                            <td class="mono">λ<sub>vorm</sub> × {{ number_format($fi['factor'], 4, ',', '') }}</td>
-                            <td class="mono">{{ number_format($fi['lambda'], 4, ',', '') }}</td>
-                            <td class="mono">{{ round($fi['weight'] * 100) }}%</td>
-                            <td class="mono bd-contrib">{{ number_format($fi['contribution'], 4, ',', '') }}</td>
+                            <td class="mono">λ<sub>vorm</sub> × {{ number_format($ei['factor'], 4, ',', '') }}</td>
+                            <td class="mono">{{ number_format($ei['lambda'], 4, ',', '') }}</td>
+                            <td class="mono">{{ round($ei['weight'] * 100) }}%</td>
+                            <td class="mono bd-contrib">{{ number_format($ei['contribution'], 4, ',', '') }}</td>
                         </tr>
+                        @endif
 
                         @php $wc = $bSide['wc']; @endphp
                         <tr>

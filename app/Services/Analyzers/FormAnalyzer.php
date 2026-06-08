@@ -2,6 +2,7 @@
 
 namespace App\Services\Analyzers;
 
+use App\Models\EloRating;
 use App\Models\TeamRecentMatch;
 
 class FormAnalyzer
@@ -20,8 +21,28 @@ class FormAnalyzer
             );
         }
 
-        $avgScored   = $matches->avg('goals_scored');
-        $avgConceded = $matches->avg('goals_conceded');
+        $eloAvailable = EloRating::exists();
+
+        if (! $eloAvailable) {
+            $avgScored   = $matches->avg('goals_scored');
+            $avgConceded = $matches->avg('goals_conceded');
+        } else {
+            $weightedScored   = 0.0;
+            $weightedConceded = 0.0;
+            $totalWeight      = 0.0;
+
+            foreach ($matches as $match) {
+                $opponentElo = EloRating::where('team_name', $match->opponent_name)->value('rating') ?? 1500.0;
+                $weight      = max(0.3, $opponentElo / 1500);
+
+                $weightedScored   += $match->goals_scored   * $weight;
+                $weightedConceded += $match->goals_conceded * $weight;
+                $totalWeight      += $weight;
+            }
+
+            $avgScored   = $weightedScored   / $totalWeight;
+            $avgConceded = $weightedConceded / $totalWeight;
+        }
 
         return [
             'attack_strength'  => $avgScored   / $wcAvg,
@@ -29,6 +50,7 @@ class FormAnalyzer
             'avg_scored'       => $avgScored,
             'avg_conceded'     => $avgConceded,
             'matches_analyzed' => $matches->count(),
+            'elo_weighted'     => $eloAvailable,
         ];
     }
 }

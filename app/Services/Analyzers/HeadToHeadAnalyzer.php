@@ -2,6 +2,7 @@
 
 namespace App\Services\Analyzers;
 
+use App\Models\EloRating;
 use App\Models\TeamH2hMatch;
 
 class HeadToHeadAnalyzer
@@ -28,7 +29,11 @@ class HeadToHeadAnalyzer
             );
         }
 
-        $homeScored = $awayScored = [];
+        $eloAvailable = EloRating::exists();
+
+        $homeScored = [];
+        $awayScored = [];
+        $weights    = [];
 
         foreach ($matches as $match) {
             if ($match->home_team_id === $homeTeamId) {
@@ -38,10 +43,17 @@ class HeadToHeadAnalyzer
                 $homeScored[] = $match->away_score;
                 $awayScored[] = $match->home_score;
             }
+
+            // Weeg op basis van hoe recent de wedstrijd is (meer recent = zwaarder)
+            $yearsAgo  = max(0, (int) now()->diffInYears($match->match_date));
+            $weights[] = $eloAvailable
+                ? max(0.3, pow(0.88, $yearsAgo))
+                : 1.0;
         }
 
-        $avgHome = array_sum($homeScored) / count($homeScored);
-        $avgAway = array_sum($awayScored) / count($awayScored);
+        $totalWeight     = array_sum($weights);
+        $avgHome         = array_sum(array_map(fn ($g, $w) => $g * $w, $homeScored, $weights)) / $totalWeight;
+        $avgAway         = array_sum(array_map(fn ($g, $w) => $g * $w, $awayScored, $weights)) / $totalWeight;
 
         return [
             'attack_strength_home'  => $avgHome / $wcAvg,
