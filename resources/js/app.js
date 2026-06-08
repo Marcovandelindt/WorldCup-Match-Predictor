@@ -43,10 +43,14 @@ document.addEventListener('click', e => {
     if (!btn) return;
     e.preventDefault();
     if (btn.getAttribute('aria-busy') === 'true') return;
+    const form     = btn.closest('form');
     const href     = btn.getAttribute('href') || btn.dataset.generate;
     const original = btn.innerHTML;
     btn.setAttribute('aria-busy', 'true');
     btn.innerHTML = '<span class="ico">⚡</span> Genereren…';
-    setTimeout(() => { window.location.href = href; }, 480);
+    setTimeout(() => {
+        if (form) form.submit();
+        else window.location.href = href;
+    }, 480);
     setTimeout(() => { btn.removeAttribute('aria-busy'); btn.innerHTML = original; }, 4000);
 });

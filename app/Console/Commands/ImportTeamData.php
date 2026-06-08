@@ -52,7 +52,12 @@ class ImportTeamData extends Command
     private function importRecentMatches(Team $team, FootballDataClient $client): void
     {
         $data    = $client->getTeamMatches($team->api_id, 10);
-        $matches = $data['matches'] ?? [];
+        $matches = array_filter(
+            $data['matches'] ?? [],
+            fn($m) => ($m['status'] ?? '') === 'FINISHED'
+                && $m['score']['fullTime']['home'] !== null
+                && $m['score']['fullTime']['away'] !== null
+        );
 
         TeamRecentMatch::where('team_id', $team->id)->delete();
 
@@ -85,7 +90,12 @@ class ImportTeamData extends Command
     private function importH2h(FootballMatch $match, FootballDataClient $client): void
     {
         $data    = $client->getHeadToHead($match->api_id);
-        $matches = $data['matches'] ?? [];
+        $matches = array_filter(
+            $data['matches'] ?? [],
+            fn($m) => ($m['status'] ?? '') === 'FINISHED'
+                && $m['score']['fullTime']['home'] !== null
+                && $m['score']['fullTime']['away'] !== null
+        );
 
         TeamH2hMatch::where('home_team_id', $match->home_team_id)
             ->where('away_team_id', $match->away_team_id)
