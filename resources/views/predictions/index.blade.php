@@ -44,36 +44,25 @@
         </div>
     </div>
 
+    @foreach($sections as $sectionKey => $section)
     @php
-        $stageLabels = [
-            'GROUP' => 'Groepsfase',
-            'R16'   => 'Achtste finales',
-            'QF'    => 'Kwartfinale',
-            'SF'    => 'Halve finale',
-            'THIRD' => 'Derde plaats',
-            'FINAL' => 'Finale',
-        ];
-        $stageShort = ['GROUP'=>'Groep','R16'=>'1/8','QF'=>'1/4','SF'=>'1/2','THIRD'=>'3e pl.','FINAL'=>'Finale'];
-    @endphp
-
-    @foreach($stageLabels as $stageKey => $stageLabel)
-    @php
-        $matches     = $matchesByStage[$stageKey] ?? collect();
+        $matches     = $section['matches'];
+        $label       = $section['label'];
         $finished    = $matches->where('status', 'FINISHED');
         $exactCount  = $finished->filter(fn($m) => $m->accuracy?->exact_score)->count();
         $winnerCount = $finished->filter(fn($m) => $m->accuracy?->correct_winner)->count();
-        $stagePoints = $finished->sum(fn($m) => $m->accuracy?->points_earned ?? 0);
+        $sectionPts  = $finished->sum(fn($m) => $m->accuracy?->points_earned ?? 0);
+        $isFinal     = $sectionKey === 'FINAL';
     @endphp
-    @if($matches->isNotEmpty())
     <section class="phase-group">
         <div class="phase-head">
-            <h3>{{ $stageLabel }}</h3>
+            <h3>{{ $label }}</h3>
             <span class="phase-line"></span>
             @if($finished->isNotEmpty())
             <span class="phase-stat">
                 <span>Exact <b>{{ $exactCount }}/{{ $finished->count() }}</b></span>
                 <span>Winnaar <b>{{ $finished->count() > 0 ? round($winnerCount / $finished->count() * 100) : 0 }}%</b></span>
-                <span>Punten <b>{{ $stagePoints }}</b></span>
+                <span>Punten <b>{{ $sectionPts }}</b></span>
             </span>
             @else
             <span class="phase-stat"><span class="dim">Nog niet gespeeld</span></span>
@@ -113,8 +102,8 @@
                             <span class="fx-todo-tag">nog te spelen</span>
                         @endif
                     </span>
-                    <span class="badge {{ $stageKey === 'FINAL' ? 'green' : '' }}">
-                        {{ $match->group_name ?? ($stageShort[$stageKey] ?? $stageKey) }}
+                    <span class="badge {{ $isFinal ? 'green' : '' }}">
+                        {{ $match->group_name ? str_replace('GROUP_', 'Gr. ', $match->group_name) : $label }}
                     </span>
                     <span class="t-right"><span class="pts {{ $ptsClass }}">{{ $ptsLabel }}</span></span>
                 </div>
@@ -122,7 +111,6 @@
             </div>
         </div>
     </section>
-    @endif
     @endforeach
 </main>
 @endsection

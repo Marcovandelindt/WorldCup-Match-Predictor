@@ -13,17 +13,36 @@ class PredictionController extends Controller
 
     public function index()
     {
-        $stageOrder = ['GROUP', 'R16', 'QF', 'SF', 'THIRD', 'FINAL'];
-
-        $matches = FootballMatch::whereHas('prediction')
+        $allMatches = FootballMatch::whereHas('prediction')
             ->with(['homeTeam', 'awayTeam', 'prediction', 'accuracy'])
             ->orderBy('match_date')
-            ->get()
-            ->groupBy('stage');
+            ->get();
 
-        $matchesByStage = collect($stageOrder)->mapWithKeys(
-            fn ($s) => [$s => $matches->get($s, collect())]
-        );
+        // Build ordered sections: one per group (A–L), then knockout rounds
+        $groupKeys = $allMatches
+            ->where('stage', 'GROUP')
+            ->pluck('group_name')
+            ->unique()->sort()->values();
+
+        $knockoutKeys = ['R16', 'QF', 'SF', 'THIRD', 'FINAL'];
+
+        $sections = [];
+
+        foreach ($groupKeys as $group) {
+            $letter = str_replace('GROUP_', '', $group);
+            $sections[$group] = [
+                'label'   => 'Groep ' . $letter,
+                'matches' => $allMatches->where('stage', 'GROUP')->where('group_name', $group)->values(),
+            ];
+        }
+
+        $knockoutLabels = ['R16' => 'Achtste finales', 'QF' => 'Kwartfinale', 'SF' => 'Halve finale', 'THIRD' => 'Derde plaats', 'FINAL' => 'Finale'];
+        foreach ($knockoutKeys as $key) {
+            $matches = $allMatches->where('stage', $key)->values();
+            if ($matches->isNotEmpty()) {
+                $sections[$key] = ['label' => $knockoutLabels[$key], 'matches' => $matches];
+            }
+        }
 
         $totalPredicted = FootballMatch::whereHas('prediction')->count();
         $totalPlayed    = FootballMatch::whereHas('accuracy')->count();
@@ -33,7 +52,7 @@ class PredictionController extends Controller
 
         $stats = compact('totalPredicted', 'totalPlayed', 'exactCount', 'winnerCount', 'totalPoints');
 
-        return view('predictions.index', compact('matchesByStage', 'stats', 'totalPoints'));
+        return view('predictions.index', compact('sections', 'stats', 'totalPoints'));
     }
 
     public function show(FootballMatch $match)
