@@ -135,21 +135,24 @@
                         <span class="val mono">{{ number_format($lambdaAway, 2, ',', '') }}<small> xG</small></span>
                     </div>
                     <div class="formula">
-                        <span class="k">λ</span> = Σ (gewicht<sub>i</sub> × index<sub>i</sub>)<br>
+                        <span class="k">λ</span> = Σ (gewicht<sub>i</sub> × component<sub>i</sub>)<br>
                         P(score) = Poisson(λ<sub>t</sub>) × Poisson(λ<sub>u</sub>)
                     </div>
                 </div>
 
                 <div class="weights">
                     @php
+                        $bd = $prediction->breakdown ?? [];
+                        $hasH2h = $bd['has_h2h'] ?? false;
                         $weights = [
-                            ['label' => 'Vorm',           'key' => 'weight_form',       'pct' => $prediction->weight_form       ?? 0.40],
-                            ['label' => 'Onderling (H2H)', 'key' => 'weight_h2h',        'pct' => $prediction->weight_h2h        ?? 0.30],
-                            ['label' => 'FIFA-ranking',   'key' => 'weight_fifa',       'pct' => $prediction->weight_fifa       ?? 0.20],
-                            ['label' => 'WK-historie',    'key' => 'weight_wc_history', 'pct' => $prediction->weight_wc_history ?? 0.10],
+                            ['label' => 'Vorm',            'pct' => $bd['home']['form']['weight'] ?? ($hasH2h ? 0.40 : 0.70)],
+                            ['label' => 'Onderling (H2H)', 'pct' => $bd['home']['h2h']['weight']  ?? ($hasH2h ? 0.30 : 0.00)],
+                            ['label' => 'FIFA-ranking',    'pct' => $bd['home']['fifa']['weight'] ?? 0.20],
+                            ['label' => 'WK-historie',     'pct' => $bd['home']['wc']['weight']   ?? 0.10],
                         ];
                     @endphp
                     @foreach($weights as $w)
+                    @if($w['pct'] > 0)
                     <div class="weight-row">
                         <div class="weight-name">
                             <b>{{ $w['label'] }}</b>
@@ -161,18 +164,112 @@
                             </span>
                         </div>
                     </div>
+                    @endif
                     @endforeach
 
                     <div class="formula" style="margin-top:18px">
                         FIFA: {{ $match->homeTeam->name }} #{{ $match->homeTeam->fifa_ranking ?? '?' }} ·
                               {{ $match->awayTeam->name }} #{{ $match->awayTeam->fifa_ranking ?? '?' }}<br>
-                        H2H: gebaseerd op historische ontmoetingen<br>
+                        WK-gemiddelde: {{ number_format($bd['wc_avg'] ?? 1.30, 2, ',', '') }} goals/wedstrijd<br>
                         Berekend op: {{ ($prediction->generated_at ?? now())->format('j M Y, H:i') }}
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    {{-- Formula breakdown --}}
+    @if(!empty($bd['home']))
+    <section class="section">
+        <div class="section-head">
+            <h2 class="section-title">Formule-breakdown</h2>
+            <span class="section-sub">Hoe elk component bijdraagt aan λ (verwachte doelpunten)</span>
+        </div>
+        <div class="breakdown-grid">
+            @foreach(['home' => $match->homeTeam, 'away' => $match->awayTeam] as $side => $team)
+            @php $bSide = $bd[$side]; @endphp
+            <div class="breakdown-card card card-pad">
+                <div class="bd-header">
+                    <span class="flag fi fi-{{ $team->flag_emoji ?? 'xx' }}"></span>
+                    <span class="bd-team">{{ $team->name }}</span>
+                    <span class="bd-lambda mono">λ = {{ number_format($bSide['lambda_total'], 4, ',', '') }}</span>
+                </div>
+                <div class="bd-table-wrap">
+                <table class="bd-table">
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Formule</th>
+                            <th>λ</th>
+                            <th>Gewicht</th>
+                            <th>Bijdrage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php $f = $bSide['form']; @endphp
+                        <tr>
+                            <td>
+                                <b>Vorm</b>
+                                <small>{{ $f['matches'] }} wed. · gem. {{ number_format($f['avg_scored'], 2, ',', '') }}/{{ number_format($f['avg_conceded'], 2, ',', '') }}</small>
+                            </td>
+                            <td class="mono">{{ number_format($f['attack'], 4, ',', '') }} × {{ number_format($f['defense'], 4, ',', '') }} × {{ number_format($bd['wc_avg'], 2, ',', '') }}</td>
+                            <td class="mono">{{ number_format($f['lambda'], 4, ',', '') }}</td>
+                            <td class="mono">{{ round($f['weight'] * 100) }}%</td>
+                            <td class="mono bd-contrib">{{ number_format($f['contribution'], 4, ',', '') }}</td>
+                        </tr>
+
+                        @if($hasH2h && !empty($bSide['h2h']))
+                        @php $h = $bSide['h2h']; @endphp
+                        <tr>
+                            <td>
+                                <b>Onderling (H2H)</b>
+                                <small>{{ $h['matches'] }} wed.</small>
+                            </td>
+                            <td class="mono">{{ number_format($h['attack'], 4, ',', '') }} × {{ number_format($h['defense'], 4, ',', '') }} × {{ number_format($bd['wc_avg'], 2, ',', '') }}</td>
+                            <td class="mono">{{ number_format($h['lambda'], 4, ',', '') }}</td>
+                            <td class="mono">{{ round($h['weight'] * 100) }}%</td>
+                            <td class="mono bd-contrib">{{ number_format($h['contribution'], 4, ',', '') }}</td>
+                        </tr>
+                        @endif
+
+                        @php $fi = $bSide['fifa']; @endphp
+                        <tr>
+                            <td>
+                                <b>FIFA-ranking</b>
+                                <small>#{{ $fi['ranking'] }}</small>
+                            </td>
+                            <td class="mono">λ<sub>vorm</sub> × {{ number_format($fi['factor'], 4, ',', '') }}</td>
+                            <td class="mono">{{ number_format($fi['lambda'], 4, ',', '') }}</td>
+                            <td class="mono">{{ round($fi['weight'] * 100) }}%</td>
+                            <td class="mono bd-contrib">{{ number_format($fi['contribution'], 4, ',', '') }}</td>
+                        </tr>
+
+                        @php $wc = $bSide['wc']; @endphp
+                        <tr>
+                            <td>
+                                <b>WK-historie</b>
+                                <small>gem. {{ number_format($wc['avg_scored'], 2, ',', '') }}/{{ number_format($wc['avg_conceded'], 2, ',', '') }}</small>
+                            </td>
+                            <td class="mono">{{ number_format($wc['attack'], 4, ',', '') }} × {{ number_format($wc['defense'], 4, ',', '') }} × {{ number_format($bd['wc_avg'], 2, ',', '') }}</td>
+                            <td class="mono">{{ number_format($wc['lambda'], 4, ',', '') }}</td>
+                            <td class="mono">{{ round($wc['weight'] * 100) }}%</td>
+                            <td class="mono bd-contrib">{{ number_format($wc['contribution'], 4, ',', '') }}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="bd-total">
+                            <td colspan="3"><b>Totaal verwachte doelpunten</b></td>
+                            <td class="mono">100%</td>
+                            <td class="mono bd-contrib"><b>{{ number_format($bSide['lambda_total'], 4, ',', '') }}</b></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </section>
+    @endif
     @else
     <div class="section">
         <div class="card card-pad" style="text-align:center; padding:40px">

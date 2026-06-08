@@ -62,27 +62,113 @@ class Predictor
             $lambdaHomeH2h = $h2hData['attack_strength_home'] * $h2hData['defense_weakness_away'] * $wcAvg;
             $lambdaAwayH2h = $h2hData['attack_strength_away'] * $h2hData['defense_weakness_home'] * $wcAvg;
 
-            // Gewichten: form 40% / H2H 30% / FIFA 20% / WK-historie 10%
-            $lambdaHome = ($lambdaHomeForm * 0.40)
-                + ($lambdaHomeH2h  * 0.30)
-                + ($lambdaHomeFifa * 0.20)
-                + ($lambdaHomeWc   * 0.10);
+            $wHome = ['form' => 0.40, 'h2h' => 0.30, 'fifa' => 0.20, 'wc' => 0.10];
+            $wAway = ['form' => 0.40, 'h2h' => 0.30, 'fifa' => 0.20, 'wc' => 0.10];
 
-            $lambdaAway = ($lambdaAwayForm * 0.40)
-                + ($lambdaAwayH2h  * 0.30)
-                + ($lambdaAwayFifa * 0.20)
-                + ($lambdaAwayWc   * 0.10);
+            $lambdaHome = ($lambdaHomeForm * $wHome['form'])
+                + ($lambdaHomeH2h  * $wHome['h2h'])
+                + ($lambdaHomeFifa * $wHome['fifa'])
+                + ($lambdaHomeWc   * $wHome['wc']);
+
+            $lambdaAway = ($lambdaAwayForm * $wAway['form'])
+                + ($lambdaAwayH2h  * $wAway['h2h'])
+                + ($lambdaAwayFifa * $wAway['fifa'])
+                + ($lambdaAwayWc   * $wAway['wc']);
         } else {
-            // Geen H2H data: H2H-gewicht herverdeeld naar form
-            // Gewichten: form 70% / FIFA 20% / WK-historie 10%
-            $lambdaHome = ($lambdaHomeForm * 0.70)
-                + ($lambdaHomeFifa * 0.20)
-                + ($lambdaHomeWc   * 0.10);
+            $h2hData       = null;
+            $lambdaHomeH2h = null;
+            $lambdaAwayH2h = null;
 
-            $lambdaAway = ($lambdaAwayForm * 0.70)
-                + ($lambdaAwayFifa * 0.20)
-                + ($lambdaAwayWc   * 0.10);
+            $wHome = ['form' => 0.70, 'h2h' => 0.00, 'fifa' => 0.20, 'wc' => 0.10];
+            $wAway = ['form' => 0.70, 'h2h' => 0.00, 'fifa' => 0.20, 'wc' => 0.10];
+
+            $lambdaHome = ($lambdaHomeForm * $wHome['form'])
+                + ($lambdaHomeFifa * $wHome['fifa'])
+                + ($lambdaHomeWc   * $wHome['wc']);
+
+            $lambdaAway = ($lambdaAwayForm * $wAway['form'])
+                + ($lambdaAwayFifa * $wAway['fifa'])
+                + ($lambdaAwayWc   * $wAway['wc']);
         }
+
+        $breakdown = [
+            'has_h2h' => $hasH2h,
+            'wc_avg'  => $wcAvg,
+            'home'    => [
+                'form' => [
+                    'attack'         => round($formHome['attack_strength'], 4),
+                    'defense'        => round($formAway['defense_weakness'], 4),
+                    'avg_scored'     => round($formHome['avg_scored'], 2),
+                    'avg_conceded'   => round($formHome['avg_conceded'], 2),
+                    'matches'        => $formHome['matches_analyzed'],
+                    'lambda'         => round($lambdaHomeForm, 4),
+                    'weight'         => $wHome['form'],
+                    'contribution'   => round($lambdaHomeForm * $wHome['form'], 4),
+                ],
+                'h2h' => $hasH2h ? [
+                    'attack'       => round($h2hData['attack_strength_home'], 4),
+                    'defense'      => round($h2hData['defense_weakness_away'], 4),
+                    'matches'      => $h2hData['matches_analyzed'],
+                    'lambda'       => round($lambdaHomeH2h, 4),
+                    'weight'       => $wHome['h2h'],
+                    'contribution' => round($lambdaHomeH2h * $wHome['h2h'], 4),
+                ] : null,
+                'fifa' => [
+                    'ranking'      => $homeTeam->fifa_ranking ?? 50,
+                    'factor'       => round($fifaData['lambda_home_factor'], 4),
+                    'lambda'       => round($lambdaHomeFifa, 4),
+                    'weight'       => $wHome['fifa'],
+                    'contribution' => round($lambdaHomeFifa * $wHome['fifa'], 4),
+                ],
+                'wc' => [
+                    'avg_scored'   => round($homeTeam->avg_goals_scored_wc, 2),
+                    'avg_conceded' => round($awayTeam->avg_goals_conceded_wc, 2),
+                    'attack'       => round($wcData['attack_home'], 4),
+                    'defense'      => round($wcData['defense_away'], 4),
+                    'lambda'       => round($lambdaHomeWc, 4),
+                    'weight'       => $wHome['wc'],
+                    'contribution' => round($lambdaHomeWc * $wHome['wc'], 4),
+                ],
+                'lambda_total' => round($lambdaHome, 4),
+            ],
+            'away' => [
+                'form' => [
+                    'attack'         => round($formAway['attack_strength'], 4),
+                    'defense'        => round($formHome['defense_weakness'], 4),
+                    'avg_scored'     => round($formAway['avg_scored'], 2),
+                    'avg_conceded'   => round($formAway['avg_conceded'], 2),
+                    'matches'        => $formAway['matches_analyzed'],
+                    'lambda'         => round($lambdaAwayForm, 4),
+                    'weight'         => $wAway['form'],
+                    'contribution'   => round($lambdaAwayForm * $wAway['form'], 4),
+                ],
+                'h2h' => $hasH2h ? [
+                    'attack'       => round($h2hData['attack_strength_away'], 4),
+                    'defense'      => round($h2hData['defense_weakness_home'], 4),
+                    'matches'      => $h2hData['matches_analyzed'],
+                    'lambda'       => round($lambdaAwayH2h, 4),
+                    'weight'       => $wAway['h2h'],
+                    'contribution' => round($lambdaAwayH2h * $wAway['h2h'], 4),
+                ] : null,
+                'fifa' => [
+                    'ranking'      => $awayTeam->fifa_ranking ?? 50,
+                    'factor'       => round($fifaData['lambda_away_factor'], 4),
+                    'lambda'       => round($lambdaAwayFifa, 4),
+                    'weight'       => $wAway['fifa'],
+                    'contribution' => round($lambdaAwayFifa * $wAway['fifa'], 4),
+                ],
+                'wc' => [
+                    'avg_scored'   => round($awayTeam->avg_goals_scored_wc, 2),
+                    'avg_conceded' => round($homeTeam->avg_goals_conceded_wc, 2),
+                    'attack'       => round($wcData['attack_away'], 4),
+                    'defense'      => round($wcData['defense_home'], 4),
+                    'lambda'       => round($lambdaAwayWc, 4),
+                    'weight'       => $wAway['wc'],
+                    'contribution' => round($lambdaAwayWc * $wAway['wc'], 4),
+                ],
+                'lambda_total' => round($lambdaAway, 4),
+            ],
+        ];
 
         $scorelines = $this->dixonColes->predict($lambdaHome, $lambdaAway);
         $best       = $scorelines[0];
@@ -96,6 +182,7 @@ class Predictor
                 'lambda_home'    => round($lambdaHome, 4),
                 'lambda_away'    => round($lambdaAway, 4),
                 'top_scorelines' => $scorelines,
+                'breakdown'      => $breakdown,
                 'generated_at'   => now(),
             ]
         );

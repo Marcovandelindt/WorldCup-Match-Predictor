@@ -222,9 +222,106 @@
     .n { color: v.$color-text; }
 }
 
+// ── Formula breakdown ────────────────────────────────────────────────────────
+.breakdown-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.breakdown-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.bd-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .flag { font-size: 1.4rem; }
+
+    .bd-team {
+        font-weight: 600;
+        font-size: .95rem;
+        flex: 1;
+    }
+
+    .bd-lambda {
+        font-family: v.$font-mono;
+        font-weight: 700;
+        font-size: .95rem;
+        color: v.$color-green-bright;
+        background: v.$color-green-soft;
+        border: 1px solid v.$color-border-green;
+        border-radius: 6px;
+        padding: 3px 10px;
+    }
+}
+
+.bd-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.bd-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .82rem;
+
+    th {
+        text-align: left;
+        font-size: .7rem;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: v.$color-text-mute;
+        padding: 0 10px 10px;
+        border-bottom: 1px solid v.$color-border;
+        white-space: nowrap;
+
+        &:not(:first-child) { text-align: right; }
+    }
+
+    td {
+        padding: 10px 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, .04);
+        vertical-align: middle;
+        color: v.$color-text-dim;
+
+        &:not(:first-child) { text-align: right; }
+
+        b {
+            display: block;
+            font-weight: 600;
+            color: v.$color-text;
+            font-size: .85rem;
+        }
+
+        small {
+            display: block;
+            font-size: .7rem;
+            color: v.$color-text-mute;
+            margin-top: 2px;
+        }
+    }
+
+    tfoot td {
+        border-top: 1px solid v.$color-border;
+        border-bottom: none;
+        padding-top: 12px;
+        color: v.$color-text;
+    }
+}
+
+.bd-contrib {
+    color: v.$color-green-bright !important;
+}
+
 // ── Responsive ───────────────────────────────────────────────────────────────
 @media (max-width: 980px) {
     .calc-grid { grid-template-columns: 1fr; }
+    .breakdown-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 680px) {

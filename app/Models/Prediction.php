@@ -12,11 +12,12 @@ class Prediction extends Model
     protected $fillable = [
         'match_id', 'predicted_home', 'predicted_away', 'confidence_pct',
         'lambda_home', 'lambda_away', 'weight_form', 'weight_h2h',
-        'weight_fifa', 'weight_wc_history', 'top_scorelines', 'generated_at',
+        'weight_fifa', 'weight_wc_history', 'top_scorelines', 'breakdown', 'generated_at',
     ];
 
     protected $casts = [
         'top_scorelines' => 'array',
+        'breakdown'      => 'array',
         'generated_at'   => 'datetime',
     ];
 
