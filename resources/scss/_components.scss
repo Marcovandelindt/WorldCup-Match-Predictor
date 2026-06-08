@@ -375,6 +375,24 @@ tr.r-wrong:hover  { background: rgba(239, 71, 87, .07); }
     }
 }
 
+// ── Flash error ────────────────────────────────────────────────────────────────
+.flash-error {
+    background: v.$color-red-soft;
+    border-bottom: 1px solid rgba(239, 71, 87, .25);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: .845rem;
+    color: v.$color-text;
+
+    .flash-error-ico {
+        color: v.$color-red;
+        font-size: .8rem;
+        flex-shrink: 0;
+    }
+}
+
 // ── Legend ───────────────────────────────────────────────────────────────────
 .legend {
     display: flex;

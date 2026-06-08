@@ -48,6 +48,13 @@
 </div>
 @endif
 
+@if(session('error'))
+<div class="flash-error" role="alert">
+    <span class="flash-error-ico">✕</span>
+    <span>{{ session('error') }}</span>
+</div>
+@endif
+
 @yield('content')
 
 <footer class="foot">

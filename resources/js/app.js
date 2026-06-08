@@ -37,20 +37,3 @@ document.addEventListener('click', e => {
     if (row) window.location.href = row.dataset.href;
 });
 
-// "Genereer voorspelling" loading state
-document.addEventListener('click', e => {
-    const btn = e.target.closest('[data-generate]');
-    if (!btn) return;
-    e.preventDefault();
-    if (btn.getAttribute('aria-busy') === 'true') return;
-    const form     = btn.closest('form');
-    const href     = btn.getAttribute('href') || btn.dataset.generate;
-    const original = btn.innerHTML;
-    btn.setAttribute('aria-busy', 'true');
-    btn.innerHTML = '<span class="ico">⚡</span> Genereren…';
-    setTimeout(() => {
-        if (form) form.submit();
-        else window.location.href = href;
-    }, 480);
-    setTimeout(() => { btn.removeAttribute('aria-busy'); btn.innerHTML = original; }, 4000);
-});

@@ -30,29 +30,26 @@ class Predictor
 
         $hasFormHome = TeamRecentMatch::where('team_id', $homeTeam->id)->exists();
         $hasFormAway = TeamRecentMatch::where('team_id', $awayTeam->id)->exists();
-        $hasH2h      = TeamH2hMatch::where(function ($q) use ($homeTeam, $awayTeam) {
+
+        if (! $hasFormHome || ! $hasFormAway) {
+            throw new \RuntimeException(
+                "Geen form-data gevonden voor {$homeTeam->name} of {$awayTeam->name}. Draai eerst wk:import-historical-data."
+            );
+        }
+
+        $hasH2h = TeamH2hMatch::where(function ($q) use ($homeTeam, $awayTeam) {
                 $q->where('home_team_id', $homeTeam->id)->where('away_team_id', $awayTeam->id);
             })->orWhere(function ($q) use ($homeTeam, $awayTeam) {
                 $q->where('home_team_id', $awayTeam->id)->where('away_team_id', $homeTeam->id);
             })->exists();
 
-        if (! $hasFormHome || ! $hasFormAway || ! $hasH2h) {
-            throw new \RuntimeException(
-                "Onvoldoende data om voorspelling te genereren voor wedstrijd ID {$match->id}. Draai eerst wk:import-team-data."
-            );
-        }
-
         $formHome = $this->form->calculate($homeTeam->id);
         $formAway = $this->form->calculate($awayTeam->id);
-        $h2hData  = $this->h2h->calculate($homeTeam->id, $awayTeam->id);
         $fifaData = $this->fifa->calculate($homeTeam->fifa_ranking ?? 50, $awayTeam->fifa_ranking ?? 50);
         $wcData   = $this->wcHistory->calculate($homeTeam, $awayTeam);
 
         $lambdaHomeForm = $formHome['attack_strength'] * $formAway['defense_weakness'] * $wcAvg;
         $lambdaAwayForm = $formAway['attack_strength'] * $formHome['defense_weakness'] * $wcAvg;
-
-        $lambdaHomeH2h  = $h2hData['attack_strength_home'] * $h2hData['defense_weakness_away'] * $wcAvg;
-        $lambdaAwayH2h  = $h2hData['attack_strength_away'] * $h2hData['defense_weakness_home'] * $wcAvg;
 
         $lambdaHomeFifa = $lambdaHomeForm * $fifaData['lambda_home_factor'];
         $lambdaAwayFifa = $lambdaAwayForm * $fifaData['lambda_away_factor'];
@@ -60,15 +57,32 @@ class Predictor
         $lambdaHomeWc   = $wcData['attack_home'] * $wcData['defense_away'] * $wcAvg;
         $lambdaAwayWc   = $wcData['attack_away'] * $wcData['defense_home'] * $wcAvg;
 
-        $lambdaHome = ($lambdaHomeForm * 0.40)
-            + ($lambdaHomeH2h  * 0.30)
-            + ($lambdaHomeFifa * 0.20)
-            + ($lambdaHomeWc   * 0.10);
+        if ($hasH2h) {
+            $h2hData       = $this->h2h->calculate($homeTeam->id, $awayTeam->id);
+            $lambdaHomeH2h = $h2hData['attack_strength_home'] * $h2hData['defense_weakness_away'] * $wcAvg;
+            $lambdaAwayH2h = $h2hData['attack_strength_away'] * $h2hData['defense_weakness_home'] * $wcAvg;
 
-        $lambdaAway = ($lambdaAwayForm * 0.40)
-            + ($lambdaAwayH2h  * 0.30)
-            + ($lambdaAwayFifa * 0.20)
-            + ($lambdaAwayWc   * 0.10);
+            // Gewichten: form 40% / H2H 30% / FIFA 20% / WK-historie 10%
+            $lambdaHome = ($lambdaHomeForm * 0.40)
+                + ($lambdaHomeH2h  * 0.30)
+                + ($lambdaHomeFifa * 0.20)
+                + ($lambdaHomeWc   * 0.10);
+
+            $lambdaAway = ($lambdaAwayForm * 0.40)
+                + ($lambdaAwayH2h  * 0.30)
+                + ($lambdaAwayFifa * 0.20)
+                + ($lambdaAwayWc   * 0.10);
+        } else {
+            // Geen H2H data: H2H-gewicht herverdeeld naar form
+            // Gewichten: form 70% / FIFA 20% / WK-historie 10%
+            $lambdaHome = ($lambdaHomeForm * 0.70)
+                + ($lambdaHomeFifa * 0.20)
+                + ($lambdaHomeWc   * 0.10);
+
+            $lambdaAway = ($lambdaAwayForm * 0.70)
+                + ($lambdaAwayFifa * 0.20)
+                + ($lambdaAwayWc   * 0.10);
+        }
 
         $scorelines = $this->dixonColes->predict($lambdaHome, $lambdaAway);
         $best       = $scorelines[0];

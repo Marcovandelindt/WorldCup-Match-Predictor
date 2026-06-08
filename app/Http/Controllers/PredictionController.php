@@ -20,7 +20,13 @@ class PredictionController extends Controller
 
     public function generate(FootballMatch $match)
     {
-        $result = $this->predictor->predict($match);
+        try {
+            $this->predictor->predict($match);
+        } catch (\RuntimeException $e) {
+            return redirect()->route('predict.show', $match)
+                ->with('error', $e->getMessage());
+        }
+
         $match->refresh()->load(['prediction', 'homeTeam', 'awayTeam']);
         $prediction  = $match->prediction;
         $totalPoints = PredictionAccuracy::sum('points_earned');
