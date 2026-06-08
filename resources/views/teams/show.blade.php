@@ -80,79 +80,8 @@
         </div>
     </div>
 
-    {{-- Split layout: Recent matches + WK 2026 --}}
-    <div class="split-2">
-
-        {{-- Recent matches --}}
-        <section class="section">
-            <div class="section-head">
-                <h2 class="section-title">
-                    Recente wedstrijden
-                    <span class="count">{{ $recentMatches->count() }}</span>
-                </h2>
-            </div>
-            <div class="card">
-                <div class="fixtures">
-                    @forelse($recentMatches as $match)
-                    @php
-                        $fixtureClass = match($match->result) {
-                            'WIN'  => 'r-w',
-                            'DRAW' => 'r-d',
-                            'LOSS' => 'r-l',
-                            default => 'r-d',
-                        };
-                        $outcomeClass = match($match->result) {
-                            'WIN'  => 'w',
-                            'DRAW' => 'g',
-                            'LOSS' => 'v',
-                            default => 'g',
-                        };
-                        $outcomeLetter = match($match->result) {
-                            'WIN'  => 'W',
-                            'DRAW' => 'G',
-                            'LOSS' => 'V',
-                            default => '?',
-                        };
-                        $opponentTeam = $teamsByApiId[$match->opponent_api_id] ?? null;
-                    @endphp
-                    <div class="fixture {{ $fixtureClass }}">
-                        <span class="fx-date">{{ $match->match_date->format('j M') }}</span>
-                        <span class="match-grid">
-                            <span class="team home">
-                                <span class="team-name">{{ $team->name }}</span>
-                                <span class="flag fi fi-{{ $team->flag_emoji ?? 'xx' }}"></span>
-                            </span>
-                            <span class="fx-vs">{{ $match->goals_scored }}–{{ $match->goals_conceded }}</span>
-                            <span class="team">
-                                <span class="flag fi fi-{{ $opponentTeam?->flag_emoji ?? 'xx' }}"></span>
-                                <span class="team-name">{{ $match->opponent_name }}</span>
-                            </span>
-                        </span>
-                        <span>
-                            @if($match->competition)
-                                <span class="badge">{{ $match->competition }}</span>
-                            @endif
-                        </span>
-                        <span class="outcome {{ $outcomeClass }}">{{ $outcomeLetter }}</span>
-                    </div>
-                    @empty
-                    <div class="fixture r-todo">
-                        <span class="fx-date">–</span>
-                        <span class="match-grid">
-                            <span class="team home"><span class="dim">Geen data</span></span>
-                            <span class="fx-vs">–</span>
-                            <span class="team"><span class="dim">–</span></span>
-                        </span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                    @endforelse
-                </div>
-            </div>
-        </section>
-
-        {{-- WK 2026 matches --}}
-        <section class="section">
+    {{-- WK 2026 matches --}}
+    <section class="section">
             <div class="section-head">
                 <h2 class="section-title">WK 2026</h2>
             </div>
@@ -253,10 +182,60 @@
                 </div>
                 @endif
                 @endforeach
-            @endif
-        </section>
+        @endif
+    </section>
 
-    </div>{{-- /.split-2 --}}
+    {{-- Recente wedstrijden --}}
+    <section class="section" style="margin-top:16px">
+        <div class="section-head">
+            <h2 class="section-title">
+                Recente wedstrijden
+                <span class="count">{{ $recentMatches->count() }}</span>
+            </h2>
+        </div>
+        <div class="card">
+            <div class="fixtures">
+                @forelse($recentMatches as $match)
+                @php
+                    $fixtureClass  = match($match->result) { 'WIN' => 'r-w', 'DRAW' => 'r-d', 'LOSS' => 'r-l', default => 'r-d' };
+                    $outcomeClass  = match($match->result) { 'WIN' => 'w', 'DRAW' => 'g', 'LOSS' => 'v', default => 'g' };
+                    $outcomeLetter = match($match->result) { 'WIN' => 'W', 'DRAW' => 'G', 'LOSS' => 'V', default => '?' };
+                @endphp
+                <div class="fixture {{ $fixtureClass }}">
+                    <span class="fx-date">{{ $match->match_date->format('j M') }}</span>
+                    <span class="match-grid">
+                        <span class="team home">
+                            <span class="team-name">{{ $team->name }}</span>
+                            <span class="flag fi fi-{{ $team->flag_emoji ?? 'xx' }}"></span>
+                        </span>
+                        <span class="fx-vs">{{ $match->goals_scored }}–{{ $match->goals_conceded }}</span>
+                        <span class="team">
+                            <span class="flag fi fi-xx"></span>
+                            <span class="team-name">{{ $match->opponent_name }}</span>
+                        </span>
+                    </span>
+                    <span class="fx-competition">
+                        @if($match->competition)
+                            <span class="badge" title="{{ $match->competition }}">{{ $match->competition }}</span>
+                        @endif
+                    </span>
+                    <span class="outcome {{ $outcomeClass }}">{{ $outcomeLetter }}</span>
+                </div>
+                @empty
+                <div class="fixture r-todo">
+                    <span class="fx-date">–</span>
+                    <span class="match-grid">
+                        <span class="team home"><span class="dim">Geen data</span></span>
+                        <span class="fx-vs">–</span>
+                        <span class="team"><span class="dim">–</span></span>
+                    </span>
+                    <span></span>
+                    <span></span>
+                </div>
+                @endforelse
+            </div>
+        </div>
+    </section>
 
     {{-- WK-resultaten per editie --}}
     @if($wcMatches->isNotEmpty())

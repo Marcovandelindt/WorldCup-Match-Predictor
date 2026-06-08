@@ -198,6 +198,20 @@
     }
 }
 
+// ── Fixture badge truncation (lange turnooi-namen) ────────────────────────────
+.fx-competition {
+    overflow: hidden;
+    min-width: 0;
+
+    .badge {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+    }
+}
+
 // ── Outcome pill ─────────────────────────────────────────────────────────────
 .outcome {
     font-family: v.$font-mono;
