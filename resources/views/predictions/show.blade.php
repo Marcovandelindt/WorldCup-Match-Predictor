@@ -223,9 +223,9 @@
                         <tr>
                             <td>
                                 <b>Onderling (H2H)</b>
-                                <small>{{ $h['matches'] }} wed.</small>
+                                <small>{{ $h['matches'] }} wed. · gem. {{ number_format($h['avg_scored'], 2, ',', '') }} goals</small>
                             </td>
-                            <td class="mono">{{ number_format($h['attack'], 4, ',', '') }} × {{ number_format($h['defense'], 4, ',', '') }} × {{ number_format($bd['wc_avg'], 2, ',', '') }}</td>
+                            <td class="mono">gem. {{ number_format($h['avg_scored'], 2, ',', '') }} goals gescoord</td>
                             <td class="mono">{{ number_format($h['lambda'], 4, ',', '') }}</td>
                             <td class="mono">{{ round($h['weight'] * 100) }}%</td>
                             <td class="mono bd-contrib">{{ number_format($h['contribution'], 4, ',', '') }}</td>

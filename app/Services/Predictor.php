@@ -49,12 +49,12 @@ class Predictor
         $wcData   = $this->wcHistory->calculate($homeTeam, $awayTeam);
 
         // 60% matchup (attack × opponent defense), 40% eigen aanval
-        // Voorkomt dat een sterke aanvaller te zwaar gestraft wordt door een goede tegenstander-defensie
-        $lambdaHomeForm = 0.60 * ($formHome['attack_strength'] * $formAway['defense_weakness'] * $wcAvg)
-                        + 0.40 * ($formHome['attack_strength'] * $wcAvg);
+        // Cap op 3.0: voorkomt dat extreme aanval × zwakke defensie combinaties onrealistisch hoog worden
+        $lambdaHomeForm = min(3.0, 0.60 * ($formHome['attack_strength'] * $formAway['defense_weakness'] * $wcAvg)
+                        + 0.40 * ($formHome['attack_strength'] * $wcAvg));
 
-        $lambdaAwayForm = 0.60 * ($formAway['attack_strength'] * $formHome['defense_weakness'] * $wcAvg)
-                        + 0.40 * ($formAway['attack_strength'] * $wcAvg);
+        $lambdaAwayForm = min(3.0, 0.60 * ($formAway['attack_strength'] * $formHome['defense_weakness'] * $wcAvg)
+                        + 0.40 * ($formAway['attack_strength'] * $wcAvg));
 
         $lambdaHomeElo = $lambdaHomeForm * $eloData['lambda_home_factor'];
         $lambdaAwayElo = $lambdaAwayForm * $eloData['lambda_away_factor'];
@@ -64,8 +64,8 @@ class Predictor
 
         if ($hasH2h) {
             $h2hData       = $this->h2h->calculate($homeTeam->id, $awayTeam->id);
-            $lambdaHomeH2h = $h2hData['attack_strength_home'] * $h2hData['defense_weakness_away'] * $wcAvg;
-            $lambdaAwayH2h = $h2hData['attack_strength_away'] * $h2hData['defense_weakness_home'] * $wcAvg;
+            $lambdaHomeH2h = $h2hData['attack_strength_home'] * $wcAvg;
+            $lambdaAwayH2h = $h2hData['attack_strength_away'] * $wcAvg;
 
             $wHome = ['form' => 0.40, 'h2h' => 0.30, 'elo' => 0.20, 'wc' => 0.10];
             $wAway = ['form' => 0.40, 'h2h' => 0.30, 'elo' => 0.20, 'wc' => 0.10];
@@ -111,8 +111,7 @@ class Predictor
                     'contribution'   => round($lambdaHomeForm * $wHome['form'], 4),
                 ],
                 'h2h' => $hasH2h ? [
-                    'attack'       => round($h2hData['attack_strength_home'], 4),
-                    'defense'      => round($h2hData['defense_weakness_away'], 4),
+                    'avg_scored'   => round($h2hData['attack_strength_home'] * $wcAvg, 2),
                     'matches'      => $h2hData['matches_analyzed'],
                     'lambda'       => round($lambdaHomeH2h, 4),
                     'weight'       => $wHome['h2h'],
@@ -148,8 +147,7 @@ class Predictor
                     'contribution'   => round($lambdaAwayForm * $wAway['form'], 4),
                 ],
                 'h2h' => $hasH2h ? [
-                    'attack'       => round($h2hData['attack_strength_away'], 4),
-                    'defense'      => round($h2hData['defense_weakness_home'], 4),
+                    'avg_scored'   => round($h2hData['attack_strength_away'] * $wcAvg, 2),
                     'matches'      => $h2hData['matches_analyzed'],
                     'lambda'       => round($lambdaAwayH2h, 4),
                     'weight'       => $wAway['h2h'],
