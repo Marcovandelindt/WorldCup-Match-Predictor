@@ -20,6 +20,8 @@
         <nav class="nav">
             <a class="nav-link {{ request()->routeIs('dashboard') ? 'is-active' : '' }}"
                href="{{ route('dashboard') }}">Dashboard</a>
+            <a class="nav-link {{ request()->routeIs('predictions.index') ? 'is-active' : '' }}"
+               href="{{ route('predictions.index') }}">Voorspellingen</a>
             <a class="nav-link {{ request()->routeIs('results.*') ? 'is-active' : '' }}"
                href="{{ route('results.index') }}">Resultaten</a>
             <a class="nav-link {{ request()->routeIs('statistics.*') ? 'is-active' : '' }}"

@@ -6,6 +6,51 @@
     cursor: pointer;
 }
 
+// ── Prediction stats bar ─────────────────────────────────────────────────────
+.pred-stats {
+    display: flex;
+    gap: 0;
+    background: v.$color-surface;
+    border: 1px solid v.$color-border;
+    border-radius: v.$r-lg;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.pred-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 18px 12px;
+    border-right: 1px solid v.$color-border;
+    text-align: center;
+
+    &:last-child { border-right: none; }
+
+    .v {
+        font-family: v.$font-mono;
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: v.$color-text;
+
+        &.green { color: v.$color-green-bright; }
+    }
+
+    .l {
+        font-size: .7rem;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: v.$color-text-dim;
+        margin-top: 4px;
+    }
+}
+
+@media (max-width: 680px) {
+    .pred-stats { flex-wrap: wrap; }
+    .pred-stat   { flex: 1 1 33%; border-bottom: 1px solid v.$color-border; }
+}
+
 // ── Match search ─────────────────────────────────────────────────────────────
 .match-search-wrap {
     margin-top: 24px;
