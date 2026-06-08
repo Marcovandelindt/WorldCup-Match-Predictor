@@ -6,6 +6,53 @@
     cursor: pointer;
 }
 
+// ── Match search ─────────────────────────────────────────────────────────────
+.match-search-wrap {
+    margin-top: 24px;
+    margin-bottom: 20px;
+}
+
+.match-search {
+    position: relative;
+    max-width: 100%;
+
+    .search-ico {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        color: v.$color-text-mute;
+        pointer-events: none;
+    }
+
+    input[type="search"] {
+        width: 100%;
+        padding: 9px 14px 9px 38px;
+        background: v.$color-surface-2;
+        border: 1px solid v.$color-border;
+        border-radius: v.$r-md;
+        color: v.$color-text;
+        font-size: .9rem;
+        outline: none;
+        transition: border-color .15s;
+
+        &::placeholder { color: v.$color-text-mute; }
+        &::-webkit-search-cancel-button { cursor: pointer; }
+
+        &:focus {
+            border-color: v.$color-green;
+        }
+    }
+}
+
+.search-empty {
+    margin-top: 12px;
+    font-size: .85rem;
+    color: v.$color-text-dim;
+}
+
 @media (max-width: 980px) {
     .stat-grid { grid-template-columns: repeat(2, 1fr); }
 }

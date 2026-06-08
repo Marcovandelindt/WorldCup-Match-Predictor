@@ -82,11 +82,23 @@
         </div>
     </section>
 
+    {{-- Search --}}
+    <div class="match-search-wrap">
+        <div class="match-search">
+            <svg class="search-ico" viewBox="0 0 20 20" fill="none">
+                <circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M13 13l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            <input type="search" id="team-search" placeholder="Zoek op land…" autocomplete="off" spellcheck="false">
+        </div>
+        <p class="search-empty" hidden>Geen wedstrijden gevonden voor "<span id="search-query"></span>".</p>
+    </div>
+
     {{-- Upcoming matches --}}
     @php
         $stageBadge = ['GROUP'=>'Groepsfase','R16'=>'Achtste F.','QF'=>'Kwartfinale','SF'=>'Halve finale','THIRD'=>'3e Plaats','FINAL'=>'Finale'];
     @endphp
-    <section class="section">
+    <section class="section" data-match-section="upcoming">
         <div class="section-head">
             <h2 class="section-title">
                 Aankomende wedstrijden
@@ -107,7 +119,7 @@
                     </thead>
                     <tbody>
                         @forelse($upcoming as $match)
-                        <tr>
+                        <tr data-teams="{{ strtolower($match->homeTeam->name) }}|{{ strtolower($match->awayTeam->name) }}">
                             <td class="num dim">
                                 {{ $match->match_date->locale('nl')->isoFormat('ddd D MMM') }}<br>
                                 <span class="dim">{{ $match->match_date->format('H:i') }}</span>
@@ -155,7 +167,7 @@
     </section>
 
     {{-- Played matches --}}
-    <section class="section">
+    <section class="section" data-match-section="finished">
         <div class="section-head">
             <h2 class="section-title">
                 Gespeelde wedstrijden
@@ -193,6 +205,7 @@
                             }
                         @endphp
                         <tr class="{{ $rowClass }}"
+                            data-teams="{{ strtolower($match->homeTeam->name) }}|{{ strtolower($match->awayTeam->name) }}"
                             @if($match->prediction) data-href="{{ route('predict.show', $match) }}" @endif>
                             <td class="num dim">{{ $match->match_date->format('j M') }}</td>
                             <td>
