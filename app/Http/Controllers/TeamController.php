@@ -15,6 +15,13 @@ class TeamController extends Controller
             ->limit(10)
             ->get();
 
+        $wcMatches = TeamRecentMatch::where('team_id', $team->id)
+            ->where('competition', 'FIFA World Cup')
+            ->orderByDesc('match_date')
+            ->get()
+            ->groupBy(fn ($m) => substr($m->match_date, 0, 4))
+            ->sortKeysDesc();
+
         // Keyed map api_id → Team for flag lookup in recent matches
         $teamsByApiId = Team::all()->keyBy('api_id');
 
@@ -52,7 +59,7 @@ class TeamController extends Controller
         return view('teams.show', compact(
             'team', 'recentMatches', 'teamsByApiId', 'form',
             'wkMatchesByStage', 'groupName', 'goalsScored', 'goalsConceded',
-            'stageLabels',
+            'stageLabels', 'wcMatches',
         ));
     }
 }

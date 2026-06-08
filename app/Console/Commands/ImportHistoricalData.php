@@ -11,7 +11,8 @@ class ImportHistoricalData extends Command
 {
     protected $signature = 'wk:import-historical-data
                             {--file=storage/app/results.csv : Pad naar de Kaggle results.csv}
-                            {--from=2000-01-01 : Alleen wedstrijden na deze datum meenemen voor form-data}';
+                            {--from=2000-01-01 : Alleen wedstrijden na deze datum meenemen voor form-data}
+                            {--wc-from=1994-01-01 : Alleen WK-wedstrijden na deze datum meenemen voor WK-historie}';
 
     protected $description = 'Importeer historische interland data uit de Kaggle CSV in de database';
 
@@ -51,7 +52,7 @@ class ImportHistoricalData extends Command
 
         $wkTeamIds = $teams->pluck('id')->flip()->toArray();
 
-        $this->info('Stap 1/3 — CSV inlezen...');
+        $this->info('Stap 1/4 — CSV inlezen...');
         $rows = $this->readCsv($file);
         $this->line(number_format(count($rows)) . ' wedstrijden ingelezen.');
 
@@ -95,57 +96,75 @@ class ImportHistoricalData extends Command
         }
 
         $this->newLine();
-        $this->info("Stap 2/3 — Recente wedstrijden importeren (vanaf {$fromDate})...");
+        $this->info("Stap 2/4 — Recente wedstrijden importeren (vanaf {$fromDate})...");
 
-        $recentByTeam = [];
+        // Verzamel form-wedstrijden (alle competities, vanaf --from)
+        // en WK-wedstrijden (alle edities, vanaf --wc-from) apart
+        $formByTeam = [];
+        $wcHistByTeam = [];
+        $wcFrom = $this->option('wc-from');
 
         foreach ($resolved as $r) {
-            if ($r['date'] < $fromDate) {
-                continue;
-            }
-
             $homeId = $r['home']->id;
             $awayId = $r['away']->id;
+            $isWc   = $r['tournament'] === 'FIFA World Cup';
 
-            if (isset($wkTeamIds[$homeId])) {
-                $recentByTeam[$homeId][] = [
-                    'opponent_name'  => $r['away']->name,
+            foreach ([
+                $homeId => ['scored' => $r['home_score'], 'conceded' => $r['away_score'], 'opponent' => $r['away']->name],
+                $awayId => ['scored' => $r['away_score'], 'conceded' => $r['home_score'], 'opponent' => $r['home']->name],
+            ] as $teamId => $side) {
+                if (! isset($wkTeamIds[$teamId])) continue;
+
+                $entry = [
+                    'opponent_name'  => $side['opponent'],
                     'match_date'     => $r['date'],
-                    'goals_scored'   => $r['home_score'],
-                    'goals_conceded' => $r['away_score'],
-                    'result'         => $this->result($r['home_score'], $r['away_score']),
+                    'goals_scored'   => $side['scored'],
+                    'goals_conceded' => $side['conceded'],
+                    'result'         => $this->result($side['scored'], $side['conceded']),
                     'competition'    => $r['tournament'],
                 ];
-            }
 
-            if (isset($wkTeamIds[$awayId])) {
-                $recentByTeam[$awayId][] = [
-                    'opponent_name'  => $r['home']->name,
-                    'match_date'     => $r['date'],
-                    'goals_scored'   => $r['away_score'],
-                    'goals_conceded' => $r['home_score'],
-                    'result'         => $this->result($r['away_score'], $r['home_score']),
-                    'competition'    => $r['tournament'],
-                ];
+                if ($r['date'] >= $fromDate) {
+                    $formByTeam[$teamId][] = $entry;
+                }
+
+                if ($isWc && $r['date'] >= $wcFrom) {
+                    $wcHistByTeam[$teamId][] = $entry;
+                }
             }
         }
 
         TeamRecentMatch::query()->delete();
 
-        $total  = count($recentByTeam);
-        $i      = 0;
-        $insert = [];
+        $allTeamIds = array_unique(array_merge(array_keys($formByTeam), array_keys($wcHistByTeam)));
+        $total      = count($allTeamIds);
+        $i          = 0;
+        $insert     = [];
 
-        foreach ($recentByTeam as $teamId => $matches) {
+        foreach ($allTeamIds as $teamId) {
             $i++;
             $team = $teams->find($teamId);
 
-            usort($matches, fn ($a, $b) => strcmp($b['match_date'], $a['match_date']));
-            $matches = array_slice($matches, 0, 30);
+            // Laatste 30 form-wedstrijden
+            $form = $formByTeam[$teamId] ?? [];
+            usort($form, fn ($a, $b) => strcmp($b['match_date'], $a['match_date']));
+            $form = array_slice($form, 0, 30);
 
-            $this->line(sprintf('[%d/%d] %s — %d wedstrijden', $i, $total, $team->name, count($matches)));
+            // Alle WK-wedstrijden; verwijder duplicaten die al in form zitten
+            $formDates   = array_column($form, 'match_date');
+            $wcUnique    = array_filter(
+                $wcHistByTeam[$teamId] ?? [],
+                fn ($m) => ! in_array($m['match_date'], $formDates)
+            );
 
-            foreach ($matches as $m) {
+            $combined = array_merge($form, array_values($wcUnique));
+
+            $this->line(sprintf(
+                '[%d/%d] %s — %d form + %d WK-historic',
+                $i, $total, $team->name, count($form), count($wcUnique)
+            ));
+
+            foreach ($combined as $m) {
                 $insert[] = [
                     'team_id'         => $teamId,
                     'opponent_api_id' => null,
@@ -166,7 +185,7 @@ class ImportHistoricalData extends Command
         }
 
         // Rapporteer WK-teams zonder data
-        $teamsWithData = array_keys($recentByTeam);
+        $teamsWithData = $allTeamIds;
         $missingTeams  = $teams->filter(fn ($t) => ! in_array($t->id, $teamsWithData));
 
         if ($missingTeams->isNotEmpty()) {
@@ -178,7 +197,7 @@ class ImportHistoricalData extends Command
         }
 
         $this->newLine();
-        $this->info('Stap 3/3 — H2H wedstrijden importeren...');
+        $this->info('Stap 3/4 — H2H wedstrijden importeren...');
 
         TeamH2hMatch::query()->delete();
 
@@ -209,6 +228,46 @@ class ImportHistoricalData extends Command
         }
 
         $this->line(number_format(count($h2hInsert)) . ' H2H wedstrijden opgeslagen.');
+
+        $this->newLine();
+        $this->info("Stap 4/4 — WK-geschiedenis berekenen (vanaf {$this->option('wc-from')})...");
+
+        $wcByTeam = [];
+
+        foreach ($resolved as $r) {
+            if ($r['tournament'] !== 'FIFA World Cup') continue;
+            if ($r['date'] < $wcFrom) continue;
+
+            $homeId = $r['home']->id;
+            $awayId = $r['away']->id;
+
+            if (isset($wkTeamIds[$homeId])) {
+                $wcByTeam[$homeId]['scored'][]   = $r['home_score'];
+                $wcByTeam[$homeId]['conceded'][] = $r['away_score'];
+            }
+            if (isset($wkTeamIds[$awayId])) {
+                $wcByTeam[$awayId]['scored'][]   = $r['away_score'];
+                $wcByTeam[$awayId]['conceded'][] = $r['home_score'];
+            }
+        }
+
+        foreach ($teams as $team) {
+            $data = $wcByTeam[$team->id] ?? null;
+
+            $avgScored   = $data ? array_sum($data['scored'])   / count($data['scored'])   : 0;
+            $avgConceded = $data ? array_sum($data['conceded']) / count($data['conceded']) : 0;
+            $matches     = $data ? count($data['scored']) : 0;
+
+            $team->update([
+                'avg_goals_scored_wc'   => round($avgScored, 2),
+                'avg_goals_conceded_wc' => round($avgConceded, 2),
+            ]);
+
+            $this->line(sprintf(
+                '  %s — %d WK-wedstrijden · %.2f gescoord · %.2f gecasseerd',
+                $team->name, $matches, $avgScored, $avgConceded
+            ));
+        }
 
         if ($unknownVsWkTeam) {
             $this->newLine();

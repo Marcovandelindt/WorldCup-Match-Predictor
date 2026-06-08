@@ -258,40 +258,93 @@
 
     </div>{{-- /.split-2 --}}
 
-    {{-- FIFA Ranking card (shown if ranking is available) --}}
-    @if($team->fifa_ranking)
+    {{-- WK-resultaten per editie --}}
+    @if($wcMatches->isNotEmpty())
     <section class="section" style="margin-top:16px">
         <div class="section-head">
-            <h2 class="section-title">FIFA Ranking</h2>
+            <h2 class="section-title">WK-geschiedenis</h2>
+            <span class="section-sub">Resultaten per editie vanaf 1994</span>
+        </div>
+        @foreach($wcMatches as $year => $matches)
+        <div class="phase-group">
+            <div class="phase-head">
+                <h3>WK {{ $year }}</h3>
+                <span class="phase-line"></span>
+            </div>
+            <div class="card">
+                <div class="fixtures">
+                    @foreach($matches as $match)
+                    @php
+                        $fc = match($match->result) { 'WIN' => 'r-w', 'DRAW' => 'r-d', 'LOSS' => 'r-l', default => 'r-d' };
+                        $oc = match($match->result) { 'WIN' => 'w', 'DRAW' => 'g', 'LOSS' => 'v', default => 'g' };
+                        $ol = match($match->result) { 'WIN' => 'W', 'DRAW' => 'G', 'LOSS' => 'V', default => '?' };
+                    @endphp
+                    <div class="fixture {{ $fc }}">
+                        <span class="fx-date">{{ \Carbon\Carbon::parse($match->match_date)->format('j M') }}</span>
+                        <span class="match-grid">
+                            <span class="team home">
+                                <span class="team-name">{{ $team->name }}</span>
+                                <span class="flag fi fi-{{ $team->flag_emoji ?? 'xx' }}"></span>
+                            </span>
+                            <span class="fx-vs">{{ $match->goals_scored }}–{{ $match->goals_conceded }}</span>
+                            <span class="team">
+                                <span class="flag fi fi-xx"></span>
+                                <span class="team-name">{{ $match->opponent_name }}</span>
+                            </span>
+                        </span>
+                        <span></span>
+                        <span class="outcome {{ $oc }}">{{ $ol }}</span>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </section>
+    @endif
+
+    {{-- Stats: FIFA ranking + WK-geschiedenis --}}
+    @if($team->fifa_ranking || $team->avg_goals_scored_wc > 0 || $team->wc_appearances)
+    <section class="section" style="margin-top:16px">
+        <div class="section-head">
+            <h2 class="section-title">Statistieken</h2>
         </div>
         <div class="card card-pad">
-            <div class="rank-big">
-                <span class="hash">#</span>
-                <span class="pos">{{ $team->fifa_ranking }}</span>
-            </div>
             <div class="rank-meta">
+                @if($team->fifa_ranking)
+                <div class="rm">
+                    <b>#{{ $team->fifa_ranking }}</b>
+                    <span>FIFA ranking</span>
+                </div>
+                @endif
                 @if($team->confederation)
                 <div class="rm">
                     <b>{{ $team->confederation }}</b>
                     <span>Confederatie</span>
                 </div>
                 @endif
-                @if($team->avg_goals_scored_wc)
-                <div class="rm">
-                    <b>{{ number_format($team->avg_goals_scored_wc, 2, ',', '') }}</b>
-                    <span>gem. goals/wed. WK</span>
-                </div>
-                @endif
-                @if($team->avg_goals_conceded_wc)
-                <div class="rm">
-                    <b>{{ number_format($team->avg_goals_conceded_wc, 2, ',', '') }}</b>
-                    <span>gem. tegend./wed. WK</span>
-                </div>
-                @endif
                 @if($team->wc_appearances)
                 <div class="rm">
                     <b>{{ $team->wc_appearances }}</b>
                     <span>WK-deelnames</span>
+                </div>
+                @endif
+                @if($team->wc_best_result)
+                <div class="rm">
+                    <b>{{ $team->wc_best_result }}</b>
+                    <span>Beste WK-resultaat</span>
+                </div>
+                @endif
+                @if($team->avg_goals_scored_wc > 0)
+                <div class="rm">
+                    <b class="green">{{ number_format($team->avg_goals_scored_wc, 2, ',', '') }}</b>
+                    <span>gem. goals/wed. op WK</span>
+                </div>
+                @endif
+                @if($team->avg_goals_conceded_wc > 0)
+                <div class="rm">
+                    <b>{{ number_format($team->avg_goals_conceded_wc, 2, ',', '') }}</b>
+                    <span>gem. tegend./wed. op WK</span>
                 </div>
                 @endif
             </div>
